@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons color="light" slot="start" (click)="onClose()">
+      <!-- <ion-back-button ></ion-back-button> -->
+      <ion-icon name="chevron-back"></ion-icon>
+    </ion-buttons>
+    <ion-title>subscription</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content color="light">
+  <div class="content">
+    <app-payment (exit)="onClose()"></app-payment>
+  </div>
+</ion-content>

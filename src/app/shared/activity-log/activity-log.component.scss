@@ -1,0 +1,165 @@
+section {
+  background: radial-gradient(71.47% 224.04% at 19.09% 13.6%, #404658 0%, #161820 100%);
+  height: 100%;
+padding-top: 30px;
+  .header {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  .date-list-wrapper {
+    height: calc(100% - 50px);
+    overflow-y: auto;
+
+    .dates-list {
+      padding: 0.5em;
+
+      header {
+        margin-left: 24px;
+        display: flex;
+        align-items: center;
+        font-family: Roboto;
+        font-size: 14px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.14;
+        letter-spacing: 0.24px;
+        text-align: left;
+        color: rgba(0, 0, 0, 0.8);
+        margin-top: 10px;
+
+        .img-wrapper {
+          background-color: black;
+          border-radius: 8px;
+          width: 24px;
+          height: 24px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .month {
+          font-family: Roboto;
+          font-size: 12px;
+          font-weight: normal;
+          font-stretch: normal;
+          font-style: normal;
+          letter-spacing: 1.88px;
+          text-align: left;
+          color: rgba(0, 0, 0, 0.8);
+          margin: 0;
+          padding-left: 10px;
+        }
+      }
+    }
+
+    .date-in-month {
+      margin-top: 20px;
+      position: relative;
+      display: FLEX;
+      justify-content: space-between;
+      align-items: center;
+
+      .date-in-month-row {
+        display: flex;
+        color: black;
+
+        .date {
+          font-family: Roboto;
+          font-size: 14px;
+          font-weight: bold;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: 1.14;
+          letter-spacing: 0.24px;
+          text-align: left;
+          color: #fff;
+        }
+
+        .day {
+          font-family: Roboto;
+          font-size: 14px;
+          font-weight: normal;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: 1.14;
+          letter-spacing: 0.24px;
+          text-align: left;
+          color: #fff;
+        }
+      }
+
+      .drill-count {
+        font-family: Roboto;
+        font-size: 14px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.14;
+        letter-spacing: 0.24px;
+        text-align: left;
+        color: #fff;
+      }
+
+      img {
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+    }
+  }
+}
+
+div.back-container {
+  position: absolute;
+  top: 50px;
+  left: 16px;
+
+  display: flex;
+  align-items: center;
+
+  p {
+    margin: 0;
+    font-weight: bold;
+    font-size: 22px;
+    line-height: 26px;
+    color: white;
+  }
+
+  svg {
+    padding-right: 7px;
+    width: 35px;
+  }
+}
+
+::ng-deep .mat-expansion-panel {
+  background: radial-gradient(71.47% 224.04% at 19.09% 13.6%, #404658 0%, #161820 100%);
+
+}
+
+::ng-deep .mat-expansion-panel-header {
+  background-color: transparent !important;
+  border: 2px solid #FCE651;
+}
+
+::ng-deep .mat-expansion-panel-header-title {
+  color: white !important;
+}
+
+::ng-deep .mat-expansion-indicator::after {
+  color: #FCE651 !important;
+}
+
+
+.no-data {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

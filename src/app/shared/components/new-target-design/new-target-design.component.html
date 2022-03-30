@@ -1,0 +1,72 @@
+<section class="target">
+    <header>
+        <div class="back-container" (click)="onBackPressed()">
+            <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 7.86914L11.6769 15.6191V11.4438H19.9286V4.29445H11.6769V0.119141L0 7.86914Z" fill="white"/>
+            </svg>
+            <p>BACK</p>
+        </div>
+
+        <div class="data">
+            <!--            <p class="number">#2</p>-->
+            <p class="title">{{challenge.metadata.title}}</p>
+        </div>
+
+        <button (click)="onStartChallenge()">START</button>
+    </header>
+
+    <div class="content">
+        <div class="numbers-column">
+            <div class="container">
+                <p class="number">OVERALL</p>
+                <p class="text" *ngIf="challenge.metadata.useBestGrouping">{{challenge.challengeRank.bestGrouping}} in</p>
+                <p class="text" *ngIf="challenge.metadata.useDisFromCenter">{{challenge.challengeRank.bestDisFromCenter}} "</p>
+                <p class="text" *ngIf="challenge.metadata.useHighestScore">{{challenge.challengeRank.highestScore}} points</p>
+                <p class="text" *ngIf="challenge.metadata.useSplitTime">{{challenge.challengeRank.bestSplitTime}} s</p>
+                <p class="text" *ngIf="challenge.metadata.useTotalTime">{{challenge.challengeRank.bestTotalTime}} s</p>
+            </div>
+            <div class="container">
+                <p class="number">MINE</p>
+                <p class="text" *ngIf="challenge.metadata.useBestGrouping">{{challenge.challengeRank.userBestGrouping}} in</p>
+                <p class="text" *ngIf="challenge.metadata.useDisFromCenter">{{challenge.challengeRank.userBestDisFromCenter}} "</p>
+                <p class="text" *ngIf="challenge.metadata.useHighestScore">{{challenge.challengeRank.userHighestScore}} points</p>
+                <p class="text" *ngIf="challenge.metadata.useSplitTime">{{challenge.challengeRank.userBestSplitTime}} s</p>
+                <p class="text" *ngIf="challenge.metadata.useTotalTime">{{challenge.challengeRank.userBestTotalTime}} s</p>
+            </div>
+            <div class="container" *ngIf="challenge.challengeRank.rank !==-1">
+                <p class="number">{{challenge.challengeRank.rank}}/{{challenge.challengeRank.challengers}}</p>
+                <p class="text">place</p>
+            </div>
+            <div class="container" *ngIf="challenge.challengeRank.rank ===-1">
+                <p class="number">0/{{challenge.challengeRank.challengers}}</p>
+                <p class="text">PLACE</p>
+            </div>
+        </div>
+
+        <img src="assets/targets/challenge-promo-target.png" style="width: 239px;height: 239px;">
+
+
+        <div class="text-and-icons-column">
+            <div class="bullet-info">
+                <div class="icon-and-text">
+                    <svg width="28" height="27" viewBox="0 0 28 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M24.5 18.27V6C24.5 2.685 21.815 0 18.5 0C15.185 0 12.5 2.685 12.5 6V21C12.5 22.65 11.15 24 9.5 24C7.85 24 6.5 22.65 6.5 21V8.73C8.24 8.1 9.5 6.45 9.5 4.5C9.5 2.01 7.49 0 5 0C2.51 0 0.5 2.01 0.5 4.5C0.5 6.45 1.76 8.1 3.5 8.73V21C3.5 24.315 6.185 27 9.5 27C12.815 27 15.5 24.315 15.5 21V6C15.5 4.35 16.85 3 18.5 3C20.15 3 21.5 4.35 21.5 6V18.27C20.501 18.6239 19.6593 19.3195 19.1235 20.2339C18.5877 21.1482 18.3922 22.2225 18.5717 23.267C18.7511 24.3115 19.294 25.259 20.1043 25.942C20.9146 26.6251 21.9402 26.9998 23 27C25.49 27 27.5 24.99 27.5 22.5C27.5 20.55 26.24 18.9 24.5 18.27Z"
+                              fill="white"/>
+                    </svg>
+                    <p class="button-info-text">{{challenge.metadata.range}} YARD </p>
+                </div>
+
+                <div class="icon-and-text">
+                    <svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.31645 22.8828L7.63353 30.207C7.84816 30.4023 8.09694 30.4999 8.37987 30.4999C8.66279 30.4999 8.9067 30.3974 9.11157 30.1923C9.31645 29.9872 9.41889 29.7431 9.41889 29.4599C9.41889 29.1767 9.31157 28.9374 9.09694 28.7421L1.77987 21.4179C1.58474 21.2031 1.34572 21.0956 1.06279 21.0956C0.779865 21.0956 0.535963 21.1982 0.331085 21.4033C0.126207 21.6083 0.0237675 21.8525 0.0237675 22.1357C0.0237675 22.4189 0.121328 22.6679 0.31645 22.8828ZM9.74084 27.4238C9.91645 27.5995 10.136 27.6874 10.3994 27.6874C10.6628 27.6874 10.8823 27.5995 11.0579 27.4238L20.336 18.1367C20.5311 17.9413 20.6287 17.7167 20.6287 17.4628C20.6287 17.2089 20.5311 16.9843 20.336 16.789L13.7213 10.1679C13.5262 9.9726 13.3018 9.87494 13.0482 9.87494C12.7945 9.87494 12.5799 9.9726 12.4043 10.1679L3.09694 19.455C2.92133 19.6308 2.83352 19.8505 2.83352 20.1142C2.83352 20.3779 2.92133 20.5976 3.09694 20.7734L9.74084 27.4238ZM12.4043 12.9804C12.5799 12.7851 12.7945 12.6874 13.0482 12.6874C13.3018 12.6874 13.5262 12.7851 13.7213 12.9804L14.453 13.7128L7.31157 20.8613C7.13597 21.037 6.91645 21.1249 6.65304 21.1249C6.38962 21.1249 6.17011 21.037 5.9945 20.8613L5.26279 20.0995L12.4043 12.9804ZM20.3652 15.1484C20.5994 15.3828 20.8774 15.4999 21.1994 15.4999C21.5213 15.4999 21.7994 15.3828 22.0335 15.1484L24.5506 12.6581C25.1165 12.0722 25.6579 11.413 26.175 10.6806C26.6921 9.94818 27.136 9.22064 27.5067 8.49799C27.8774 7.77533 28.2238 7.03314 28.5457 6.27142C28.8677 5.5097 29.1213 4.81635 29.3067 4.19135C29.4921 3.56635 29.653 2.97552 29.7896 2.41888C29.9262 1.86224 29.9945 1.43744 29.9945 1.14447C29.9945 0.851501 29.975 0.656189 29.936 0.558533C29.8384 0.539001 29.6433 0.524353 29.3506 0.514587C29.0579 0.504822 28.6335 0.573181 28.0774 0.719666C27.5213 0.86615 26.9311 1.02728 26.3067 1.20306C25.6823 1.37885 24.9896 1.62787 24.2287 1.95013C23.4677 2.2724 22.7262 2.61908 22.0043 2.99017C21.2823 3.36127 20.5555 3.8056 19.8238 4.32318C19.0921 4.84076 18.4433 5.39252 17.8774 5.97845L15.3604 8.46869C15.1262 8.70306 15.0091 8.98138 15.0091 9.30365C15.0091 9.62592 15.1262 9.90424 15.3604 10.1386L20.3652 15.1484ZM19.7213 7.82416C21.1847 6.37885 23.1067 5.13861 25.4872 4.10345C24.6287 5.64642 23.6921 6.93549 22.6774 7.97064L20.1604 10.4609C19.9262 10.6953 19.6482 10.8124 19.3262 10.8124C19.0043 10.8124 18.7262 10.6953 18.4921 10.4609L17.7896 9.78705L19.7213 7.82416Z"
+                              fill="white"/>
+                    </svg>
+                    <p class="button-info-text">{{challenge.metadata.numberOfBullets}}</p>
+                </div>
+            </div>
+
+            <p class="goal">GOAL: {{challenge.metadata.description}}</p>
+        </div>
+
+    </div>
+</section>

@@ -1,0 +1,130 @@
+<section class="sign-up">
+    <div class="logo-title">
+        <img class="logo" src="assets/logo.png">
+        <p class="sign-up">Sign <span>Up</span></p>
+    </div>
+    <form class="signInForm" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+            <label class="image">
+                <div *ngIf="!profile.picture" class="circle" (click)="selectImage()">
+                    <svg width="36" height="28" viewBox="0 0 36 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4.5 5C3.30653 5 2.16193 5.47411 1.31802 6.31802C0.474106 7.16193 0 8.30653 0 9.5L0 23C0 24.1935 0.474106 25.3381 1.31802 26.182C2.16193 27.0259 3.30653 27.5 4.5 27.5H31.5C32.6935 27.5 33.8381 27.0259 34.682 26.182C35.5259 25.3381 36 24.1935 36 23V9.5C36 8.30653 35.5259 7.16193 34.682 6.31802C33.8381 5.47411 32.6935 5 31.5 5H28.863C27.6696 4.99975 26.5252 4.52547 25.6815 3.6815L23.8185 1.8185C22.9748 0.974528 21.8304 0.500255 20.637 0.5H15.363C14.1696 0.500255 13.0252 0.974528 12.1815 1.8185L10.3185 3.6815C9.47478 4.52547 8.33038 4.99975 7.137 5H4.5ZM5.625 9.5C5.32663 9.5 5.04048 9.38147 4.8295 9.1705C4.61853 8.95952 4.5 8.67337 4.5 8.375C4.5 8.07663 4.61853 7.79048 4.8295 7.5795C5.04048 7.36853 5.32663 7.25 5.625 7.25C5.92337 7.25 6.20952 7.36853 6.4205 7.5795C6.63147 7.79048 6.75 8.07663 6.75 8.375C6.75 8.67337 6.63147 8.95952 6.4205 9.1705C6.20952 9.38147 5.92337 9.5 5.625 9.5ZM25.875 15.125C25.875 17.2136 25.0453 19.2166 23.5685 20.6935C22.0916 22.1703 20.0886 23 18 23C15.9114 23 13.9084 22.1703 12.4315 20.6935C10.9547 19.2166 10.125 17.2136 10.125 15.125C10.125 13.0364 10.9547 11.0334 12.4315 9.55653C13.9084 8.07969 15.9114 7.25 18 7.25C20.0886 7.25 22.0916 8.07969 23.5685 9.55653C25.0453 11.0334 25.875 13.0364 25.875 15.125Z"
+                              fill="#282C36"/>
+                    </svg>
+                    <div class="add">+Add photo</div>
+                </div>
+                <div *ngIf="profile.picture" class="round-border">
+                    <img [src]="domSanitizer.bypassSecurityTrustUrl(profile.picture)">
+                    <ion-icon (click)="selectImage()" *ngIf="isEditMode" ios="ios-create" md="md-create"
+                              size="large"></ion-icon>
+                </div>
+            </label>
+        </div>
+
+        <div class="row">
+            <label>
+                <input type="text" formControlName="first_name" class="form-control" placeholder="Nickname"/>
+            </label>
+
+            <div *ngIf="submitted && f.first_name.errors" class="invalid-feedback">
+                <div *ngIf="f.first_name.errors.required">Nickname is required</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <label>
+                <input type="email" formControlName="email" class="form-control" placeholder="Email"/>
+            </label>
+            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                <div *ngIf="f.email.errors.required">Email is required</div>
+                <div *ngIf="f.email.errors.email">Invalid Email</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <label>
+                <input [type]="fieldTextType ? 'text' : 'password'" formControlName="password" class="form-control"
+                       placeholder="Password" #password/>
+                <svg (click)="toggleFieldTextType()" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                     class="eye" viewBox="0 0 24 24">
+                    <defs>
+                        <clipPath id="clip-path">
+                            <path d="M0 0H24V24H0z" class="cls-1"/>
+                        </clipPath>
+                        <style>
+                            .cls-1 {
+                                fill: none
+                            }
+                        </style>
+                    </defs>
+                    <g id="Icon_Visibility_Filled" clip-path="url(#clip-path)"
+                       data-name="Icon / Visibility / Filled" opacity="0.5">
+                        <path id="Path_988"
+                              d="M24-39a11.827 11.827 0 0 0-11 7.5A11.827 11.827 0 0 0 24-24a11.827 11.827 0 0 0 11-7.5A11.827 11.827 0 0 0 24-39zm0 12.5a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5zm0-8a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"
+                              data-name="Path 988" transform="translate(-12 44)"/>
+                        <path id="Box" d="M0 0H24V24H0z" class="cls-1"/>
+                    </g>
+                </svg>
+            </label>
+            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                <div *ngIf="f.password.errors.required">Password is required</div>
+                <div *ngIf="f.password.errors.minlength"> Name must be at least 6 characters long.</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <label>
+                <input [type]="fieldTextType ? 'text' : 'password'" formControlName="confirmPassword"
+                       class="form-control" placeholder="Confirm Password" #confirmPassword/>
+                <svg (click)="toggleFieldTextType()" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                     class="eye" viewBox="0 0 24 24">
+                    <defs>
+                        <clipPath id="clip-path">
+                            <path d="M0 0H24V24H0z" class="cls-1"/>
+                        </clipPath>
+                        <style>
+                            .cls-1 {
+                                fill: none
+                            }
+                        </style>
+                    </defs>
+                    <g id="Icon_Visibility_Filled" clip-path="url(#clip-path)"
+                       data-name="Icon / Visibility / Filled" opacity="0.5">
+                        <path id="Path_988"
+                              d="M24-39a11.827 11.827 0 0 0-11 7.5A11.827 11.827 0 0 0 24-24a11.827 11.827 0 0 0 11-7.5A11.827 11.827 0 0 0 24-39zm0 12.5a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5zm0-8a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"
+                              data-name="Path 988" transform="translate(-12 44)"/>
+                        <path id="Box" d="M0 0H24V24H0z" class="cls-1"/>
+                    </g>
+                </svg>
+            </label>
+            <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
+                <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
+                <div *ngIf="f.confirmPassword.errors.mustMatch">Passwords must match</div>
+            </div>
+        </div>
+<!--        <div class="row">-->
+<!--            <label>-->
+<!--                <select-->
+<!--                        class="custom-select mb-3"-->
+<!--                        (change)="changeCity($event)"-->
+<!--                        formControlName="cityName"-->
+<!--                >-->
+<!--                    <option value="">Choose City</option>-->
+<!--                    <option *ngFor="let city of cities" [ngValue]="city">-->
+<!--                        {{ city }}-->
+<!--                    </option>-->
+<!--                </select>-->
+<!--            </label>-->
+<!--            <div class="invalid-feedback" *ngIf="submitted && f.cityName?.errors">-->
+<!--                <sup>*</sup>Please provide range name-->
+<!--            </div>-->
+
+<!--        </div>-->
+        <div class="controls">
+            <button type="submit" class="confirm" (click)="continueToThird()">START SESSION</button>
+            <button class="cancel" (click)="onBackPressed()">BACK TO LOGIN</button>
+        </div>
+    </form>
+
+</section>
+

@@ -1,0 +1,321 @@
+@import "../../../../assets/colors";
+
+:host {
+  height: 100%;
+}
+
+section.sign-up {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 0 25px;
+  overflow-y: auto;
+
+  background: radial-gradient(71.47% 224.04% at 19.09% 13.6%, #404658 0%, #161820 100%);
+
+
+  p.logo {
+    width: 98px;
+    height: 45px;
+    margin: 28px auto 52px auto;
+    font-size: 38px;
+    color: white;
+  }
+
+  p.sign-up {
+    display: flex;
+    align-items: center;
+    font-size: 27px;
+    margin: 0 auto 125px auto;
+    color: white;
+
+    span {
+      color: #FCE651;
+      padding-left: 0.3em;
+    }
+  }
+
+  form.signInForm {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+
+    div.row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-evenly;
+      width: 100%;
+
+      label {
+        width: 100%;
+
+        svg g {
+          fill: rgba(255, 255, 255, 0.6);
+        }
+
+        input {
+          width: 100%;
+          border-radius: 3.5px;
+          height: 54px;
+          background-color: transparent;
+          color: rgba(255, 255, 255, 0.6);
+          border: 1px solid rgba(255, 255, 255, 0.6);
+          box-sizing: border-box;
+          padding: 15px;
+          color: white;
+
+          &:focus {
+            background-color: transparent !important;
+          }
+        }
+      }
+
+      svg.eye {
+        width: 24px;
+        height: 24px;
+        position: absolute;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+      }
+    }
+
+    // Errors
+    div.errors {
+      box-sizing: border-box;
+      padding: 0 10px;
+
+      p {
+        font-size: 12px;
+        line-height: 1.17;
+        letter-spacing: 0.4px;
+        text-align: left;
+        color: #ce564b;
+        margin: 0;
+      }
+    }
+  }
+
+  div.controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 33px;
+
+    button.confirm {
+      height: 56px;
+      border-radius: 4px;
+      background-color: #FCE651;
+      color: #000;
+
+      font-size: 14px;
+      line-height: 16px;
+      letter-spacing: 1.25px;
+      margin-bottom: 0.5em;
+    }
+
+    button.cancel {
+      height: 56px;
+      border-radius: 4px;
+      border: solid 1px #FCE651;
+      background-color: transparent;
+      font-size: 14px;
+      line-height: 16px;
+      letter-spacing: 1.25px;
+      color: #FCE651;
+    }
+  }
+
+}
+
+
+.invalid-feedback {
+  width: 100%;
+  margin-left: 18px;
+  color: #ce564b;
+  font-family: Roboto;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.14;
+  letter-spacing: 0.24px;
+}
+
+
+@media only screen and (min-device-width: 360px) and (min-device-height: 673px) {
+  form.signInForm {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+
+    div.row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-evenly;
+      width: 100%;
+
+      label {
+        position: relative;
+        box-sizing: border-box;
+        padding: 0.5em;
+        width: 100%;
+      }
+
+      p {
+        position: absolute;
+        margin: 0;
+        height: 14px;
+        font-size: 12px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.17;
+        letter-spacing: 0.4px;
+        text-align: left;
+        color: #bfbfbf;
+
+        padding: 0 10px;
+        z-index: 1;
+        transition: all 0.3s;
+
+        transform: translateY(-50%);
+        top: 50%;
+        left: 20px;
+
+      }
+
+      input {
+        height: 46px !important;
+        border-radius: 4px;
+        opacity: 0.5;
+        border: solid 1px #000000;
+        width: 100%;
+        color: #000;
+        box-sizing: border-box;
+        padding: 0.5em;
+
+      }
+
+      svg.eye {
+        width: 24px;
+        height: 24px;
+        position: absolute;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+      }
+
+      label.hasValue p,
+      label:focus-within p {
+        top: 0;
+        transform: translateY(0%);
+        left: 20px;
+        background-color: white;
+      }
+    }
+
+    // Errors
+    div.errors {
+      box-sizing: border-box;
+      padding: 0 10px;
+
+      p {
+        font-size: 12px;
+        line-height: 1.17;
+        letter-spacing: 0.4px;
+        text-align: left;
+        color: #ce564b;
+        margin: 0;
+      }
+    }
+  }
+
+}
+
+.image {
+  display: flex;
+  justify-content: center;
+
+
+  .circle {
+    padding: 0.5em;
+    width: 120px;
+    height: 120px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px dotted white;
+    background-color: rgba(255, 255, 255, 0.1);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    svg path {
+      fill: #282C36;
+    }
+
+    .add {
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 300;
+      padding-top: 4.5px;
+    }
+  }
+
+  img {
+    height: 120px;
+    border-radius: 100%;
+    width: 120px;
+    border: 3px solid #f6f6f6;
+  }
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: white;
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: white;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: white;
+}
+
+.logo-title {
+  height: 20vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  img {
+    width: 60px;
+    height: 90px;
+    margin-bottom: 10px;
+  }
+}
+
+
+.custom-select {
+  border: 1px solid hsla(0, 0%, 100%, .6);
+  width: 100%;
+  border-radius: 3.5px;
+  height: 54px;
+  background-color: transparent;
+  color: hsla(0, 0%, 100%, .6);
+  box-sizing: border-box;
+  padding: 15px;
+  color: #fff;
+}

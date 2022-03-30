@@ -1,0 +1,45 @@
+<section class="target-selection">
+    <header>
+        <div [class.ios]="isiOS" class="back-container" (click)="onBackPressed()">
+            <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 7.86914L11.6769 15.6191V11.4438H19.9286V4.29445H11.6769V0.119141L0 7.86914Z" fill="white"/>
+            </svg>
+            <p>BACK</p>
+        </div>
+        <p class="title">Select <span>Target</span></p>
+        <button class="connect" (click)="reScan()" *ngIf="!isScanning">connect to
+            target
+        </button>
+
+        <p class="explanation-text" *ngIf="false">
+            If you don’t see your Target in the list, please go to Bluetooth settings and make sure your device is
+            paired
+        </p>
+    </header>
+
+    <div class="ble-img" *ngIf="isScanning">
+        <img *ngIf="isScanning" class="scanAnimation" src="assets/icons/Group%20770.svg">
+    </div>
+
+    <ul class="target-list" *ngIf="!isScanning && myTargets.length>0">
+        <li *ngFor="let item of myTargets" (click)="onTargetSelected(item)"
+            [ngClass]="{'selected': item.isSelected}">{{ item.name }}</li>
+    </ul>
+
+    <!--        <div class="targets-list-container" *ngIf="myTargets.length > 0 ">-->
+    <!--            <div class="targets-list" *ngFor="let target of  myTargets; let i = index">-->
+    <!--                <div class="targets-count"> Traget #{{i}}</div>-->
+    <!--                <div (click)="onTargetSelected(target);" class="target-name">-->
+    <!--                    <span>  {{target.name}}</span>-->
+    <!--                    <img *ngIf="target.isSelected" src="assets/icons/Icon%20-%20Check%20Circle%20-%20Filled.svg">-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+
+
+    <button class="continue" [disabled]="targetNotSelected" (click)="onGoToEditDrill()"> Continue</button>
+</section>
+
+
+
+

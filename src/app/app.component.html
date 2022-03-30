@@ -1,0 +1,15 @@
+
+<div class="loader-wrapper" *ngIf="isLoding">
+    <span> Please Wait</span>
+    <img src="../assets/icons/loader.gif">
+</div>
+
+
+
+
+
+<ion-app [class.ios]="isiOS">
+    <ion-router-outlet></ion-router-outlet>
+</ion-app>
+
+

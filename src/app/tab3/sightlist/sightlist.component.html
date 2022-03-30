@@ -1,0 +1,18 @@
+<section>
+    <header>
+        <div>
+            <img (click)="onBackPressed()" src="assets/icons/Arrow%20@3x.png">
+            <span>Select Sight</span>
+        </div>
+    </header>
+    <div class="content">
+        <div class="all-weapons-title"> All Sights</div>
+        <div class="weapon-list-wrapper">
+            <div (click)="onAddSight(sight)" class="weapon-list" *ngFor="let sight of DEFAULT_SIGHTS">
+                <span class="weapon-title">{{sight}}</span>
+                <img *ngIf="isSightSelected(sight)" src="assets/icons/Icon%20-%20Check%20Circle%20-%20Filled.svg">
+            </div>
+        </div>
+        <div class="place-holder"></div>
+    </div>
+</section>
