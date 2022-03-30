@@ -1,0 +1,8 @@
+{
+  "name": "onTarget",
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
+  "type": "angular"
+}
