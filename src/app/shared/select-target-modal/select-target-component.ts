@@ -50,7 +50,7 @@ export class SelectTargetComponent implements OnInit {
     personalChosen = false;
     isPersonalTargetAround = false;
     private currentTargetId: string;
-    private isConnected: boolean;
+    isConnected: boolean;
     myTargetsForKeepAlive = [];
     isiOS;
     targets = [];
@@ -232,13 +232,11 @@ export class SelectTargetComponent implements OnInit {
     }
 
     reScan() {
-        this.bleService.resetConnection();
         this.isScanning = true;
         this.initGatewayScan();
     }
 
     onTargetSelected(target: any) {
-        debugger;
         this.myTargets.forEach(t => t.isSelected = false);
         target.isSelected = true;
         this.storageService.setItem('slectedTarget', target);
@@ -250,7 +248,6 @@ export class SelectTargetComponent implements OnInit {
             if (this.bleService.isGateway) {
                 this.bleService.dissconect().then(data => {
                     this.bleService.isGateway = false;
-                    debugger
                     this.bleService.connect(target.uuid);
                     this.bleService.notifyTargetConnected.subscribe(d => {
                         this.isConnected = true;
@@ -259,7 +256,6 @@ export class SelectTargetComponent implements OnInit {
                     });
                 });
             } else {
-                debugger
                 this.bleService.connect(target.uuid);
                 this.bleService.notifyTargetConnected.subscribe(data => {
                     this.isConnected = true;
@@ -305,42 +301,51 @@ export class SelectTargetComponent implements OnInit {
     }
 
     scanErrorInitialScan(error: any) {
-        if (error.indexOf('Location ') > -1) {
-            this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.LOCATION]).then(r => {
 
-            });
-        }
-        console.error('BLE SCAN ERROR', error);
+        this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.BLUETOOTH_SCAN]).then(r => {
+            console.log(r);
+        });
+        this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.BLUETOOTH_CONNECT]).then(r => {
+            console.log(r);
+        });
+        this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION]).then(r => {
+            console.log(r);
+        });
+        this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.ACCESS_FINE_LOCATION]).then(r => {
+            console.log(r);
+        });
+
     }
 
     onDeviceDiscoveredInitialScan(device: any) {
-            if (device.name) {
-                console.log('FOUND DEVICE:  IN SELECT-TRAGET-COMPONET' + device.name);
+        if (device.name) {
+            console.log('FOUND DEVICE:  IN SELECT-TRAGET-COMPONET' + device.name);
+            if (device.name && device.name.toLowerCase().includes('adl') ||
+                device.name.toLowerCase().includes('e64') ||
+                device.name.toLowerCase().includes('e1n') ||
+                device.name.toLowerCase().includes('e1n') ||
+                device.name.toLowerCase().includes('eMarn') ||
+                device.name.toLowerCase().includes('17') ||
+                device.name.toLowerCase().includes('003') ||
+                device.name.toLowerCase().includes('e16') ||
+                device.name.toLowerCase().includes('nordic')) {
+                this.addTargetToList({name: device.name, id: device.id});
+            } else if (device.name && device.name.toLowerCase().includes('egateway')) {
+                this.bleService.gateways.push(device.id);
+                this.bleService.isGateway = true;
+                this.initService.isGateway = true;
+                this.isConnected = true;
+
                 debugger
-                if (device.name && device.name.toLowerCase().includes('adl') ||
-                    device.name.toLowerCase().includes('e64') ||
-                    device.name.toLowerCase().includes('e1n') ||
-                    device.name.toLowerCase().includes('e1n') ||
-                    device.name.toLowerCase().includes('eMarn') ||
-                    device.name.toLowerCase().includes('17') ||
-                    device.name.toLowerCase().includes('003') ||
-                    device.name.toLowerCase().includes('e16') ||
-                    device.name.toLowerCase().includes('nordic')) {
-                    this.addTargetToList({name: device.name, id: device.id});
-                } else if (device.name && device.name.toLowerCase().includes('egateway')) {
-                    this.bleService.gateways.push(device.id);
-                    this.bleService.isGateway = true;
-                    this.initService.isGateway = true;
-                    debugger
-                    this.bleService.currentTargetId = device.id;
-                    console.log('UUUID OF GATEWAY IS: ',device.id)
-                    this.bleService.connect(device.uuid);
-                    console.log('DEVICE OBJECT ' ,device);
-                    console.log('UUUID OF GATEWAY I WANTED : ',this.bleService.currentTargetId)
+                this.bleService.currentTargetId = device.id;
+                console.log('UUUID OF GATEWAY IS: ', device.id);
+                this.bleService.connect(device.id);
+                console.log('DEVICE OBJECT ', device);
+                console.log('UUUID OF GATEWAY I WANTED : ', this.bleService.currentTargetId);
 
 
-                }
             }
+        }
     }
 
 
