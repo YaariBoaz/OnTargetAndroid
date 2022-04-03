@@ -166,9 +166,9 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
         this.targetH = this.initService.screenH;
 
         if (this.targetW > this.targetH) {
-            this.madadToUse = this.targetH - 150 + 10;
+            this.madadToUse = 220;
         } else {
-            this.madadToUse = this.targetW - 150 + 10;
+            this.madadToUse = 220;
         }
     }
 
@@ -434,7 +434,6 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
     }
 
     onReconnect() {
-        debugger
         this.bleService.connect(this.bleService.currentTargetId);
     }
 
@@ -617,6 +616,7 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                 this.isConnected = true;
                 // const loader = this.showToast('Target Connected', 'success');
             }
+
         });
         this.bleService.notifyDisconnect.subscribe((flag) => {
             if (flag) {
@@ -658,7 +658,7 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
     }
 
     setTargetType(name) {
-        if (name === '003' || name.indexOf('64') > -1) {
+        if (name.indexOf('003') > -1 || name.indexOf('64') > -1) {
             this.targetType = TargetType.Type_64;
             this.isGateway = true;
             return;

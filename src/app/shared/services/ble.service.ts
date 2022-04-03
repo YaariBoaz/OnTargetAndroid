@@ -210,7 +210,7 @@ export class BleService {
         console.log('MESSAGE ARRIVED: ' + messageFromGatewaty);
         if (messageFromGatewaty.indexOf(',B,') > -1) {
             this.gatewayService.processData(messageFromGatewaty);
-        } else if (selectedTarget && messageFromGatewaty.indexOf('<') > -1 && messageFromGatewaty.indexOf(selectedTarget.name) > -1) {
+        } else if (selectedTarget && messageFromGatewaty.indexOf(',S,') > -1 && messageFromGatewaty.indexOf(selectedTarget.name) > -1) {
             this.gatewayService.processData(messageFromGatewaty);
         } else if (messageFromGatewaty.indexOf('Connecting') > -1) {
             this.gatewayTargets = {gateway: this.currentTargetId, target: messageFromGatewaty.split(' ')[3]};

@@ -361,8 +361,8 @@ export class GatewayService {
         let xPos;
         let yPos;
         if (targetType === TargetType.Type_64) {
-            xPos = 4.85714 * x - 38.85714;
-            yPos = 4.85714 * y - 38.85714;
+            xPos = Math.abs((3.75 * x - 30) - 210);
+            yPos = (3.75 * y - 30);
         } else if (targetType === TargetType.Type_16) {
             nominalStep = 7;
             n = 5;
@@ -373,18 +373,16 @@ export class GatewayService {
             xPos = x;
             yPos = y;
         } else { // 128
-            debugger;
             let disPointFromCenter128 = Math.sqrt(Math.pow((245 - x), 2) + Math.pow((245 - y), 2));
             disPointFromCenter128 = disPointFromCenter128 / 10;
             if (targetId.toLowerCase().indexOf('cs') > -1) {
-                xPos = 0.7278 * x - 47.306;
-                yPos = 0.7278 * y - 47.306;
+                // xPos = 0.7278 * x - 47.306;
+                xPos = 0.58333 * x - 37.91667
+                //  yPos = 0.7278 * y - 47.306;
+                yPos = 0.58333 * y - 37.91667
             } else {
                 xPos = 0.5955 * x - 14.886;
                 yPos = 0.5955 * y - 14.886;
-                if (targetId[0] === 'e') {
-                    yPos = this.width - yPos;
-                }
             }
         }
         let zeroData = {} as any;
@@ -615,7 +613,7 @@ export class GatewayService {
     }
 
     getTargetType(chosenTarget: any): TargetType {
-        if (chosenTarget === '003' || chosenTarget === '004') {
+        if (chosenTarget.indexOf('003') > -1 || chosenTarget === '004') {
             return TargetType.Type_64;
         }
         if (chosenTarget.indexOf('eMar') > -1) {

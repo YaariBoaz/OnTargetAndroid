@@ -254,14 +254,6 @@
         "runs": true
         },
       {
-          "id": "cordova-plugin-idfa.Idfa",
-          "file": "plugins/cordova-plugin-idfa/www/Idfa.js",
-          "pluginId": "cordova-plugin-idfa",
-        "merges": [
-          "cordova.plugins.idfa"
-        ]
-        },
-      {
           "id": "cordova-plugin-file.iosFileSystem",
           "file": "plugins/cordova-plugin-file/www/ios/FileSystem.js",
           "pluginId": "cordova-plugin-file",
@@ -293,8 +285,7 @@
       "cordova-plugin-screen-orientation": "3.0.2",
       "cordova-plugin-x-socialsharing": "6.0.3",
       "es6-promise-plugin": "4.2.2",
-      "cordova-plugin-device": "2.0.2",
-      "cordova-plugin-idfa": "2.0.0"
+      "cordova-plugin-device": "2.0.2"
     };
     // BOTTOM OF METADATA
     });
