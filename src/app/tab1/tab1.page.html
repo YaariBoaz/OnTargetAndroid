@@ -39,7 +39,6 @@
             <div class="profile">
                 <div class="avatar" *ngIf="profile.img">
                     <img *ngIf="profile.img" [src]="profile.img">
-                    <img *ngIf="!profile.img" src="../../assets/avatar.jpg" />
                     <svg width="146" class="shape" height="25" viewBox="0 0 146 25" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <path d="M0 0H145.814L131.233 24.22H14.5814L0 0Z" fill="#FC5151" />
@@ -69,13 +68,14 @@
             </div>
         </div>
 
-        <ng-container *ngIf="mySubscription">
-            <div class="d-flex align-item-center justify-content-center">
-                <ion-icon name="star" style="color: #FCE651;"></ion-icon>
-                <div style="color:white;">{{mySubscription.title ? mySubscription.title: mySubscription.type}}
-                    Subscription</div>
-            </div>
-        </ng-container>
+<!--        <ng-container *ngIf="mySubscription">-->
+<!--            <div class="d-flex align-item-center justify-content-center">-->
+<!--                <ion-icon name="star" style="color: #FCE651;"></ion-icon>-->
+<!--                <div style="color:white;">{{mySubscription.title ? mySubscription.title: mySubscription.type}}-->
+<!--                    Subscription</div>-->
+<!--            </div>-->
+<!--        </ng-container>-->
+
 
 
         <!--        <div *ngIf="!isNotTrainedYet" class="slides">-->

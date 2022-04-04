@@ -113,16 +113,19 @@ export class GatewayService {
         this.stats.forEach(item => {
             splits.push(item.pageData.splitTime);
         });
-        // const recommendation = this.shootingService.getRecommendation(this.shots, {
-        //     X: parentImageWidth / 2,
-        //     Y: parentImageHeight / 2
-        // });
+
 
         let cId = null;
         if (this.shootingService.isChallenge) {
             cId = this.shootingService.challengeId;
             cId = this.shootingService.selectedDrill.challngeId;
         }
+
+        const hitsForServer = [];
+        this.hits.forEach(item => {
+            hitsForServer.push({x: item.xPos, y: item.yPos});
+        })
+
         const drill: DrillInfo = {
             challngeId: cId,
             sessionId: this.userService.getUserId(),
@@ -157,7 +160,7 @@ export class GatewayService {
             b2Drop: 0,
             exposeTime: 0,
             hideTime: 0,
-            rawHitsLocation: this.hits,
+            rawHitsLocation: hitsForServer,
             userName: this.userService.getUser().name,
             status: DrillStatus.Done,
             hitsToPass: 0,
@@ -351,7 +354,7 @@ export class GatewayService {
 
     // If gateway received a shot message
     handleShot_MSG_NEW(x, y) {
-        this.hits.push({x, y});
+
         const saveX = x;
         const saveY = y;
         const targetId = this.storageService.getItem('slectedTarget').name;
@@ -399,6 +402,7 @@ export class GatewayService {
 
         const orb = this.calcOrbital(disPointFromCenter);
         this.pageData.counter++;
+        this.hits.push({xPos, yPos});
         if (this.pageData.counter > this.shootingService.numberOfBullersPerDrill) {
             console.log('Shot After Drill Finished - Ignoring It');
 
