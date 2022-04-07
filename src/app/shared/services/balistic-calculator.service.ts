@@ -211,8 +211,8 @@ export class BalisticCalculatorService {
         const xStep = w / nominalStep;
         const yStep = h / nominalStep;
 
-        let xPos = (xStep * x);
-        let yPos = yStep * y;
+        const xPos = (xStep * x);
+        const yPos = yStep * y;
 
 
         const disPointFromCenter = 1.905 * Math.sqrt(Math.pow((nominalStep / 2 - x), 2) + Math.pow((nominalStep / 2 - y), 2));
@@ -270,16 +270,22 @@ export class BalisticCalculatorService {
         if (hits.length > 2) {
             hits.forEach((hit, i) => {
                 {
-                    const dr = Math.abs(hit.disFromCenter - std);
+                    const dr = Math.abs(hit.DisFromCenter - std);
                     if (dr > avg) {
                         console.log('Found Anmoly:[{' + hit.x + '},{ ' + hit.y + '}]');
                         hit.isBarhan = true;
-                        this.sessionHits[i].isBarhan = true;
-                        this.sessionHits[i].DisFromCenter = hit.DisFromCenter;
+                        if (this.sessionHits[i]) {
+                            this.sessionHits[i].DisFromCenter = hit.DisFromCenter;
+                            this.sessionHits[i].isBarhan = false;
+                        }
                     } else {
                         hit.isBarhan = false;
-                        this.sessionHits[i].DisFromCenter = hit.DisFromCenter;
-                        this.sessionHits[i].isBarhan = false;
+                        if (this.sessionHits[i]) {
+                            this.sessionHits[i].DisFromCenter = hit.DisFromCenter;
+                            this.sessionHits[i].isBarhan = false;
+                        }
+
+
                     }
                 }
                 ;
@@ -388,8 +394,8 @@ export class BalisticCalculatorService {
         });
         const ordered: ZeroHitData[] = nonBarahnHits.sort((n1, n2) => n2.DisFromCenter - n1.DisFromCenter);
         if (ordered.length >= 2) {
-            const a = new Hit(ordered[0].x, ordered[0].y);
-            const b = new Hit(ordered[1].x, ordered[1].y);
+            const a = new Hit((ordered[0] as any).xPos, (ordered[0] as any).yPos);
+            const b = new Hit((ordered[1] as any).xPos, (ordered[1] as any).yPos);
             disGroup = Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2)) / 10;
             let xN = 0;
             let yN = 0;
@@ -434,7 +440,6 @@ export class BalisticCalculatorService {
         // new hit arrvies
         // determent which target is this (16,64,128)
         this.sessionHits = hits;
-        debugger
         try {
             this.mNumShots++;
             const timesStrings = {}; // get splittime and total time for the hits
@@ -484,7 +489,7 @@ export class BalisticCalculatorService {
 
             const latestHitData = this.sessionHits[this.sessionHits.length - 1];
             const napamDistanceFromCenter = this.calcDistanceFromCenter(x, y, this.targetType);
-            const napamToView = this.updateZeroTableAndTargetUI(latestHitData.x, latestHitData.y,
+            const napamToView = this.updateZeroTableAndTargetUI(latestHitData.xPos, latestHitData.yPos,
                 latestHitData.isBarhan, napamDistanceFromCenter);
             const clicks = this.setClickViews(napamToCalcClicks, naparToCalcClikcs, devider,
                 this.shootingService.selectedDrill.range, this.shootingService.getMOABySight(), this.targetType);
@@ -493,7 +498,7 @@ export class BalisticCalculatorService {
                 status = 'Scattered';
             } else if (napamToCalcClicks.grouping < 10 && napamToCalcClicks.grouping > 5) {
                 status = 'Good Grouping';
-            }else{
+            } else {
                 status = 'Excellent';
             }
             clicks.status = status;
@@ -514,8 +519,8 @@ export class BalisticCalculatorService {
 
                 return clicks;
             }
-        } catch {
-
+        } catch (ex) {
+            console.log(ex);
         }
     }
 

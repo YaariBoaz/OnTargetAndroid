@@ -1,0 +1,17 @@
+<section>
+    <header>
+        <div>
+            <span class="white-text">Save</span><span class="yellow-text">Progress</span>
+        </div>
+    </header>
+    <div class="content">
+        <span>Save the drill before leaving?</span>
+        <img src="assets/icons/save-drill.png">
+        <div>
+            <button mat-button class="cancel-btn" (click)="onClose(0)">Cancel</button>
+            <button mat-button class="cancel-btn" (click)="onClose(1)">NO</button>
+            <button mat-button class="save-btn" (click)="onClose(2)">SAVE AND QUIT</button>
+        </div>
+    </div>
+</section>
+

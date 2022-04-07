@@ -10,6 +10,9 @@ android {
 apply from: "../capacitor-cordova-android-plugins/cordova.variables.gradle"
 dependencies {
     implementation project(':capacitor-camera')
+    implementation project(':capacitor-filesystem')
+    implementation project(':capacitor-share')
+    implementation project(':capacitor-screenshot')
     implementation "com.soundcloud.android:android-crop:1.0.0@aar"
     implementation "androidx.appcompat:appcompat:1.0.0"
     implementation "com.android.billingclient:billing:4.0.0"

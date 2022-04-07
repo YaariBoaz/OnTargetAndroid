@@ -31,6 +31,10 @@ import {ConstantData, TargetType} from './constants';
 import {NativePageTransitions, NativeTransitionOptions} from '@ionic-native/native-page-transitions/ngx';
 import {BalisticCalculatorService} from '../services/balistic-calculator.service';
 import {HammerGestureConfig} from '@angular/platform-browser';
+import {MatDialog} from "@angular/material/dialog";
+import {DrillConfirmDialogComponent} from "./drill-confirm-dialog/drill-confirm-dialog.component";
+import {ShareDialogComponent} from "../share-dialog/share-dialog.component";
+import {ChallengesService} from "../ChooseDrill/challenges.service";
 
 
 @Component({
@@ -128,11 +132,13 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
 
     constructor(
         private screenOrientation: ScreenOrientation,
+        private challengesService: ChallengesService,
         private storageService: StorageService,
         private shootingService: ShootingService,
         private countupTimerService: CountupTimerService,
         public toastController: ToastController,
         private userService: UserService,
+        public dialog: MatDialog,
         private apiService: ApiService,
         private nativePageTransitions: NativePageTransitions,
         private bleService: BleService,
@@ -559,6 +565,18 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                     this.drillIsFinished = true;
                     this.cd.detectChanges();
                     this.countupTimerService.pauseTimer();
+                    const dialogRef = this.dialog.open(ShareDialogComponent, {
+                        data: {
+                            drill: this.drill,
+                            summary: this.summaryObject,
+                            grouping: this.groupingNumber,
+                            totalTime: this.countupTimerService.getTimerValue()
+                        }
+                    });
+
+                    dialogRef.afterClosed().subscribe(result => {
+                        console.log(`Dialog result: ${result}`);
+                    });
                 }
             }
         });
@@ -580,6 +598,20 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                 this.drillIsFinished = true;
             }
         });
+
+        this.gateway.notifyChellengeSaved.subscribe(data => {
+            if (data) {
+                this.challengesService.getMyChallenges().subscribe(challenges => {
+                    if (challenges) {
+                        challenges.forEach(challenge => {
+                            if (this.shootingService.challenge.id === challenge.id) {
+                                console.log(challenge);
+                            }
+                        })
+                    }
+                });
+            }
+        })
         this.gateway.hitArrived.subscribe((data: any) => {
             if (data && !this.isFinish && data.statsData.stats.length > 0) {
                 if (this.drill.drillType === 3 && data.statsData.zeroData && Object.keys(data.statsData.zeroData).length !== 0) {
@@ -600,6 +632,27 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                         this.drillIsFinished = true;
                         this.cd.detectChanges();
                         this.countupTimerService.pauseTimer();
+                        if (this.isChallenge) {
+                            this.gateway.updateHistory(true);
+                        }
+                        debugger;
+                        const time = this.countupTimerService.timerValue.mins + ':' + this.countupTimerService.timerValue.seconds;
+                        const dialogRef = this.dialog.open(ShareDialogComponent, {
+                            data: {
+                                drill: this.drill,
+                                shots: this.shots,
+                                summary: this.summaryObject,
+                                targetType: this.targetType,
+                                grouping: this.groupingNumber,
+                                totalTime: time
+                            },
+                            width: '100%        ',
+                            height: '100%       '
+                        });
+
+                        dialogRef.afterClosed().subscribe(result => {
+                            console.log(`Dialog result: ${result}`);
+                        });
                     }
                 }
             }

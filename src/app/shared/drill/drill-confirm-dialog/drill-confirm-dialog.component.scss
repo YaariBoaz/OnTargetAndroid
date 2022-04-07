@@ -1,0 +1,110 @@
+section {
+  background: radial-gradient(84.23% 321.62% at 89.79% 93.15%, #404658 0%, #161820 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */
+;
+  box-shadow: 0px 4px 34px rgba(0, 0, 0, 0.45);
+  height: 100%;
+  width: 100%;
+
+  header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 40px;
+
+    div {
+      .white-text {
+        padding-right: 10px;
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 27px;
+        line-height: 32px;
+        /* identical to box height */
+        text-align: center;
+
+        color: #FFFFFF;
+      }
+
+      .yellow-text {
+        color: #FCE651;
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 27px;
+        line-height: 32px;
+        /* identical to box height */
+        text-align: center;
+      }
+    }
+  }
+
+
+  .content {
+    height: calc(100% - 100px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    
+    span{
+      font-family: 'Roboto', serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 21px;
+      /* identical to box height */
+
+      color: #FFFFFF;
+
+
+    }
+    img {
+      width: 70px;
+    }
+    div{
+      width: 420px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .cancel-btn{
+        border: 1px solid #FCE651;
+        box-sizing: border-box;
+        border-radius: 3px;
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 19px;
+        /* identical to box height */
+        text-align: center;
+        text-transform: uppercase;
+        color: #FCE651;
+        width: 110px;
+        height: 35px;
+        background: transparent;
+
+      }
+      .save-btn{
+        background: #FCE651;
+        border-radius: 3px;
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 19px;
+        /* identical to box height */
+        text-align: center;
+        text-transform: uppercase;
+        color: #000000;
+        width: 170px;
+        height: 40px;
+      }
+    }
+  }
+}
+
+
+
+
+
+
