@@ -5,7 +5,7 @@
     <img class="bg-pic" *ngIf="drill.bg == backgroundsEnum.DARK" src="assets/backgrounds/warehouse.png"/>
 
 
-    <header [class.isHistoryBG]="isHistory==true" *ngIf="!isChallenge || !challangeNotStarted">
+    <header [class.isHistoryBG]="isHistory===true" *ngIf="!isChallenge || !challangeNotStarted">
         <div class="back-button" (click)="onBackPressed()">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.721 22.938">
                 <defs>
@@ -153,7 +153,7 @@
             <div *ngIf="showResults" class="some-wrapper">
 
                 <div class="target-container" [style.width.px]="madadToUse" [style.height.px]="madadToUse">
-                    <div class="64" *ngIf="targetType == targetTypeEnum.Type_64" >
+                    <div class="64" *ngIf="targetType === targetTypeEnum.Type_64">
                         <div *ngIf="drill?.drillType == drillTypeEnum.Regular" [style.width.px]="madadToUse"
                              [style.height.px]="madadToUse"
                              style="background-color: white;border-radius: 100%;">
@@ -205,17 +205,17 @@
                         </div>
                     </div>
                     <div [class.isBarhan]="shot.isBarhan" class="hit" *ngFor="let shot of shots; let i = index"
-                         [class.lastShot]="i == shots.length -1"
+                         [class.lastShot]="i === shots.length -1"
                          style="position: absolute;"
                          [style.top.px]=shot.y [style.left.px]=shot.x>
                         {{i + 1}}
                     </div>
-                    <ng-template *ngIf="drill?.drillType == drillTypeEnum.Zero">
-                        <div *ngFor="let shot of shotsThatAreNotCounted; let i = index" style="position: absolute;"
+                    <div class="shotsThatAreNotCounted" *ngIf="drill?.drillType == drillTypeEnum.Zero">
+                        <div  class="shotsThatAreNotCountedShot" *ngFor="let shot of shotsThatAreNotCounted; let i = index" style="position: absolute;"
                              [class.napar]="shot.isNapar" [class.napam]="shot.isNapam"
                              [style.top.px]=shot.y [style.left.px]=shot.x>
                         </div>
-                    </ng-template>
+                    </div>
                 </div>
             </div>
             <div class="welcome-message" *ngIf="!showResults && !showCounter">
@@ -239,21 +239,21 @@
         </div>
         <div class="counter" *ngIf="showCounter">
             <svg xmlns="http://www.w3.org/2000/svg" width="125" height="190" viewBox="0 0 125 190" class="one"
-                 *ngIf="counter == 1">
+                 *ngIf="counter === 1">
                 <path style="fill:#fee715ff" id="Path_16893" fill="rgba(206,86,75,0.81)"
                       d="M2.784-159.152q19.72 0 29.928-5.684t12.76-18.908H73.08V0H31.088v-136.184H2.784z"
                       data-name="Path 16893" transform="translate(-2.784 183.744)"/>
             </svg>
 
             <svg xmlns="http://www.w3.org/2000/svg" width="125" height="190" viewBox="0 0 125 190" class="two"
-                 *ngIf="counter == 2">
+                 *ngIf="counter === 2">
                 <path style="fill:#fee715ff" id="Path_16892" fill="rgba(206,86,75,0.81)"
                       d="M9.048-30.856h122.728V0H9.048zm88.624-47.792Q64.264-61.48 59.856-37.584H11.6A93.022 93.022 0 0 1 29-67.628a99.523 99.523 0 0 1 28.768-22.388q19.72-10.44 28.884-20.764t9.164-22.852q0-24.592-18.1-24.592-11.832 0-17.516 5.1t-5.68 16.94l-.7 9.512h-41.3q.232-60.784 64.264-60.784 58.232 0 58.232 45.936 0 22.5-8.816 37.816T97.672-78.648z"
                       data-name="Path 16892" transform="translate(-9.048 187.456)"/>
             </svg>
 
             <svg xmlns="http://www.w3.org/2000/svg" width="125" height="190" viewBox="0 0 125 190" class="three"
-                 *ngIf="counter == 3">
+                 *ngIf="counter === 3">
                 <path style="fill:#fee715ff " id="Path_16891" fill="rgba(206,86,75,0.81)"
                       d="M64.264-156.368q-15.08 1.856-15.08 16.936v9.048H9.28q0-54.752 54.984-56.84zM48.488-56.84q0 28.3 17.168 29.7V3.48Q8.816.7 8.12-56.84zm81.2 3.48q0 28.072-13.572 42.224T72.616 3.48v-30.624q18.792-1.624 18.792-22.968 0-15.312-6.844-22.736t-22.156-7.424H49.184v-30.16h11.6q13.224 0 19.72-6.032T87-135.72q0-18.792-14.616-20.648v-30.856q52.432.928 52.432 53.36 0 25.056-18.56 38.048 22.736 11.832 23.432 42.456z"
                       data-name="Path 16891" transform="translate(-8.12 187.224)"/>

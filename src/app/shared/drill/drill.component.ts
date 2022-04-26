@@ -22,7 +22,7 @@ import {ApiService} from '../services/api.service';
 import {BleService} from '../services/ble.service';
 import {HitNohitService} from './hit-nohit.service';
 import {Router} from '@angular/router';
-import {AlertController, ToastController} from '@ionic/angular';
+import {AlertController, IonRouterOutlet, ModalController, ToastController} from '@ionic/angular';
 import {ScreenOrientation} from '@ionic-native/screen-orientation/ngx';
 import {GatewayService} from '../services/gateway.service';
 import {InitService} from '../services/init.service';
@@ -31,10 +31,8 @@ import {ConstantData, TargetType} from './constants';
 import {NativePageTransitions, NativeTransitionOptions} from '@ionic-native/native-page-transitions/ngx';
 import {BalisticCalculatorService} from '../services/balistic-calculator.service';
 import {HammerGestureConfig} from '@angular/platform-browser';
-import {MatDialog} from "@angular/material/dialog";
-import {DrillConfirmDialogComponent} from "./drill-confirm-dialog/drill-confirm-dialog.component";
-import {ShareDialogComponent} from "../share-dialog/share-dialog.component";
-import {ChallengesService} from "../ChooseDrill/challenges.service";
+import {BulletBankService} from '../services/bullet-bank.service';
+import {SubscriptionPage} from '../subscription/subscription.page';
 
 
 @Component({
@@ -100,7 +98,7 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
     fakeShots = FakeData.fakeShots;
     targetType: TargetType;
     isZero: boolean;
-
+    isNotEnoughBullets = false;
     weaponToShow;
     sightToShow;
     leftClick = 0;
@@ -129,22 +127,22 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
     public get drillTypeEnum(): typeof DrillType {
         return DrillType;
     }
-
     constructor(
         private screenOrientation: ScreenOrientation,
-        private challengesService: ChallengesService,
         private storageService: StorageService,
         private shootingService: ShootingService,
+        private bulletBankService:BulletBankService,
         private countupTimerService: CountupTimerService,
         public toastController: ToastController,
         private userService: UserService,
-        public dialog: MatDialog,
         private apiService: ApiService,
         private nativePageTransitions: NativePageTransitions,
         private bleService: BleService,
         private gateway: GatewayService,
         private cd: ChangeDetectorRef,
+        private modalController:ModalController,
         private router: Router,
+        private routerOutlet: IonRouterOutlet,
         private ngZone: NgZone,
         private initService: InitService,
         public alertController: AlertController,
@@ -314,16 +312,17 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                     text: 'Yes',
                     handler: () => {
                         this.ngZone.runGuarded(() => {
+
                             this.groupingNumber = 0;
                             this.countupTimerService.stopTimer();
-                            if (!this.isChallenge) {
                                 if (this.isGateway) {
+                                    this.bulletBankService.subtractBullets(this.shots.length);
                                     this.gateway.updateHistory();
                                     this.gateway.initStats();
                                 } else {
+                                    this.bulletBankService.subtractBullets(this.shotNumber);
                                     this.hitNohitService.updateHistory();
                                     this.hitNohitService.initStats();
-                                }
                             }
                             this.initStats();
                             this.setTimeElapse();
@@ -331,6 +330,9 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                             this.stats = Object.assign(this.stats, []);
                             this.drillHasNotStarted = true;
                             this.showResults = false;
+                            if (this.bulletBankService.getNumberOfBulletsRemaining() - this.drill.numOfBullets  <= 0) {
+                                this.handleNoBulletsLeftAfterRestart();
+                            }
                         });
                     }
                 },
@@ -339,11 +341,14 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                     cssClass: 'secondary',
                     handler: (blah) => {
                         this.ngZone.runGuarded(() => {
+                            this.bulletBankService.subtractBullets(this.shots.length);
                             this.groupingNumber = 0;
                             this.countupTimerService.stopTimer();
                             if (this.isGateway) {
+                                this.bulletBankService.subtractBullets(this.shots.length);
                                 this.gateway.initStats();
                             } else {
+                                this.bulletBankService.subtractBullets(this.shotNumber);
                                 this.hitNohitService.initStats();
                             }
                             this.initStats();
@@ -352,6 +357,10 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                             this.stats = Object.assign(this.stats, []);
                             this.drillHasNotStarted = true;
                             this.showResults = false;
+                            if (this.bulletBankService.getNumberOfBulletsRemaining() - this.drill.numOfBullets  <= 0) {
+                                this.handleNoBulletsLeftAfterRestart();
+
+                            }
                         });
                     }
                 }
@@ -392,12 +401,15 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                     text: 'Yes',
                     handler: () => {
                         this.ngZone.runGuarded(() => {
+
                             if (this.isGateway) {
                                 this.gateway.updateHistory();
                                 this.gateway.initStats();
+                                this.bulletBankService.subtractBullets(this.shots.length);
                             } else {
                                 this.hitNohitService.updateHistory();
                                 this.hitNohitService.initStats();
+                                this.bulletBankService.subtractBullets(this.shotNumber);
                             }
                             this.initStats();
                             this.bleService.resetShots();
@@ -417,10 +429,13 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                     cssClass: 'secondary',
                     handler: (blah) => {
                         this.ngZone.runGuarded(() => {
+                            this.bulletBankService.subtractBullets(this.shots.length);
                             if (this.isGateway) {
                                 this.gateway.initStats();
+                                this.bulletBankService.subtractBullets(this.shots.length);
                             } else {
                                 this.hitNohitService.initStats();
+                                this.bulletBankService.subtractBullets(this.shotNumber);
                             }
                             this.initStats();
                             this.bleService.resetShots();
@@ -455,8 +470,6 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                 this.showCounter = false;
                 this.drillHasNotStarted = false;
                 this.bleService.resetShots();
-
-                // THIS IS THE CODE FOR DRAWING A MATRIX
                 // const data = [];
                 // for (let i = 65; i <= 425; i += 20) {
                 //     for (let j = 65; j <= 425; j += 20) {
@@ -555,7 +568,7 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
     private registerHitNoHitNotifications() {
         this.hitNohitService.hitArrived.subscribe((data) => {
             if (data !== null && !this.drillHasNotStarted && !this.drillIsFinished) {
-                this.shotNumber = data.hitNumber;
+                this.shotNumber = data.statsData.stats.length;
                 this.stats = data.statsData.stats;
                 this.pageData = data.statsData.page;
                 this.isFinish = data.statsData.isFinish;
@@ -565,18 +578,6 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                     this.drillIsFinished = true;
                     this.cd.detectChanges();
                     this.countupTimerService.pauseTimer();
-                    const dialogRef = this.dialog.open(ShareDialogComponent, {
-                        data: {
-                            drill: this.drill,
-                            summary: this.summaryObject,
-                            grouping: this.groupingNumber,
-                            totalTime: this.countupTimerService.getTimerValue()
-                        }
-                    });
-
-                    dialogRef.afterClosed().subscribe(result => {
-                        console.log(`Dialog result: ${result}`);
-                    });
                 }
             }
         });
@@ -598,20 +599,6 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                 this.drillIsFinished = true;
             }
         });
-
-        this.gateway.notifyChellengeSaved.subscribe(data => {
-            if (data) {
-                this.challengesService.getMyChallenges().subscribe(challenges => {
-                    if (challenges) {
-                        challenges.forEach(challenge => {
-                            if (this.shootingService.challenge.id === challenge.id) {
-                                console.log(challenge);
-                            }
-                        })
-                    }
-                });
-            }
-        })
         this.gateway.hitArrived.subscribe((data: any) => {
             if (data && !this.isFinish && data.statsData.stats.length > 0) {
                 if (this.drill.drillType === 3 && data.statsData.zeroData && Object.keys(data.statsData.zeroData).length !== 0) {
@@ -627,32 +614,13 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                     this.summaryObject = data.statsData.summaryObject;
                     this.shots.push({x: data.statsData.shot.x, y: data.statsData.shot.y});
                     this.cd.detectChanges();
-                    this.scrollToBottom();
+                    setTimeout(()=>{
+                        this.scrollToBottom();
+                    },500)
                     if (this.drill.numOfBullets === this.stats.length) {
                         this.drillIsFinished = true;
                         this.cd.detectChanges();
                         this.countupTimerService.pauseTimer();
-                        if (this.isChallenge) {
-                            this.gateway.updateHistory(true);
-                        }
-                        debugger;
-                        const time = this.countupTimerService.timerValue.mins + ':' + this.countupTimerService.timerValue.seconds;
-                        const dialogRef = this.dialog.open(ShareDialogComponent, {
-                            data: {
-                                drill: this.drill,
-                                shots: this.shots,
-                                summary: this.summaryObject,
-                                targetType: this.targetType,
-                                grouping: this.groupingNumber,
-                                totalTime: time
-                            },
-                            width: '100%        ',
-                            height: '100%       '
-                        });
-
-                        dialogRef.afterClosed().subscribe(result => {
-                            console.log(`Dialog result: ${result}`);
-                        });
                     }
                 }
             }
@@ -814,6 +782,19 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
         } else {
             this.drill.drillType = DrillType.Regular;
         }
+    }
+
+    private async handleNoBulletsLeftAfterRestart() {
+        await this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
+        const modal = await this.modalController.create({
+            component: SubscriptionPage,
+            swipeToClose: false,
+            presentingElement: this.routerOutlet.nativeEl,
+            cssClass:'modal-fullscreen'
+
+        });
+        return await modal.present();
+        this.isNotEnoughBullets = true;
     }
 }
 

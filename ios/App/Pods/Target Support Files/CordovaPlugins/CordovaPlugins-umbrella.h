@@ -12,6 +12,8 @@
 
 #import "AppDelegate+nativepagetransitions.h"
 #import "NativePageTransitions.h"
+#import "APPBackgroundMode.h"
+#import "APPMethodMagic.h"
 #import "BLECentralPlugin.h"
 #import "BLECommandContext.h"
 #import "CBPeripheral+Extensions.h"
@@ -56,7 +58,7 @@
 #import "CDVAssetLibraryFilesystem.h"
 #import "CDVFile.h"
 #import "CDVLocalFilesystem.h"
-#import "IdfaPlugin.h"
+#import "Insomnia.h"
 #import "FileUtility.h"
 #import "InAppPurchase.h"
 #import "SKProduct+LocalizedPrice.h"

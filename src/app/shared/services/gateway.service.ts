@@ -38,7 +38,6 @@ export class GatewayService {
     };
     notifyTargetBattery = new Subject();
     notifyKeepAlive = new Subject();
-    notifyChellengeSaved = new Subject();
     readonly DEFAULT_PAGE_DATA = {
         distanceFromCenter: 0,
         splitTime: '',
@@ -101,7 +100,7 @@ export class GatewayService {
     }
 
     // When drill is finished and the user decides to save the drill
-    updateHistory(isChallenge?) {
+    updateHistory() {
         this.drill = this.shootingService.selectedDrill;
         let updatedData = this.storageService.getItem('homeData');
         if (!updatedData) {
@@ -126,6 +125,7 @@ export class GatewayService {
         this.hits.forEach(item => {
             hitsForServer.push({x: item.xPos, y: item.yPos});
         })
+
         const drill: DrillInfo = {
             challngeId: cId,
             sessionId: this.userService.getUserId(),
@@ -175,7 +175,6 @@ export class GatewayService {
         };
 
         this.apiService.syncDataGateway(drill).subscribe(() => {
-            this.notifyChellengeSaved.next(true)
             this.apiService.getDashboardData(this.userService.getUserId()).subscribe((data1) => {
                 this.storageService.setItem('homeData', data1);
                 this.initService.newDashboardData.next(true);
@@ -382,7 +381,7 @@ export class GatewayService {
             if (targetId.toLowerCase().indexOf('cs') > -1) {
                 // xPos = 0.7278 * x - 47.306;
                 xPos = 0.58333 * x - 37.91667
-                //  yPos = 0.7278 * y - 47.306;
+                // yPos = 0.7278 * y - 47.306;
                 yPos = 0.58333 * y - 37.91667
             } else {
                 xPos = 0.5955 * x - 14.886;

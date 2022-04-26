@@ -4,7 +4,6 @@ import {RouteReuseStrategy} from '@angular/router';
 
 import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
 import {BluetoothSerial} from '@ionic-native/bluetooth-serial/ngx';
-import {BluetoothLE} from '@ionic-native/bluetooth-le/ngx';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -21,8 +20,6 @@ import {BleService} from './shared/services/ble.service';
 import {Crop} from '@ionic-native/crop/ngx';
 import {CommonModule} from '@angular/common';
 import {GatewayService} from './shared/services/gateway.service';
-import {HTTP_INTERCEPTORS} from '@angular/common/http';
-import {HttpErrorInterceptor} from './shared/services/interceptor.service';
 import {ErrorModalComponent} from './shared/popups/error-modal/error-modal.component';
 import {NativePageTransitions} from '@ionic-native/native-page-transitions/ngx';
 import {MaterialModule} from './shared/material/material.module';
@@ -34,11 +31,11 @@ import {HammerModule} from '@angular/platform-browser';
 import {ActivityLogComponent} from './shared/activity-log/activity-log.component';
 import {Tab1PageModule} from './tab1/tab1.module';
 import {Tab2PageModule} from './tab2/tab2.module';
-import {InAppPurchase2} from '@ionic-native/in-app-purchase-2/ngx';
 import {PurchaseService} from './shared/services/purchase.service';
 import {DrillModule} from './shared/drill/drill.module';
 import {ApiService} from './shared/services/api.service';
-import {Camera} from '@capacitor/camera';
+import {BulletBankService} from './shared/services/bullet-bank.service';
+import { InAppPurchase2 } from '@awesome-cordova-plugins/in-app-purchase-2/ngx';
 
 
 // @ts-ignore
@@ -80,15 +77,18 @@ import {Camera} from '@capacitor/camera';
         GatewayService,
         BleService,
         Crop,
-        BluetoothLE,
         PurchaseService,
-        InAppPurchase2
+        InAppPurchase2,
+        BulletBankService
     ],
     exports: [MaterialModule],
     bootstrap: [AppComponent]
 })
 export class AppModule {
 }
+
+
+
 
 
 

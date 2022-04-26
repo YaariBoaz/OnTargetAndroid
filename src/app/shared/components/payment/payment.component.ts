@@ -1,7 +1,7 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {Component,EventEmitter, OnInit, Output} from '@angular/core';
 import { IAPProduct } from '@ionic-native/in-app-purchase-2';
-import { Platform } from '@ionic/angular';
 import { PurchaseService } from '../../services/purchase.service';
+import {MatDialogRef} from "@angular/material/dialog";
 
 @Component({
     selector: 'app-payment',
@@ -37,26 +37,23 @@ export class PaymentComponent implements OnInit {
         }
     ];
 
-    isAndroid: boolean = this.plt.is("android");
-
-    constructor(private purchaseService: PurchaseService,
-        private plt: Platform) {
-            
-    }
+    constructor(private purchaseService: PurchaseService,private dialogRef: MatDialogRef<PaymentComponent>) {
+     }
 
     ngOnInit() {
-
+        console.log('IN PAYMETN.COMP')
         this.purchaseService.getProducts().then((products: IAPProduct[]) => {
-            // this.products = products;
+            debugger
+            this.products = products;
             this.products = products.filter((pro) => { return pro.price != null });
             this.products.forEach(x => x['isSelected'] = false);
             this.products[0]['isSelected'] = true;
-            console.log("products =>", JSON.stringify(products));
+            console.log("products =>", products);
         });
 
-        this.purchaseService.$notifyPurchaseApproved.subscribe(data => {
-            if (data) {
-                this.exit.emit(true);
+        this.purchaseService.$notifyPurchaseApproved.subscribe(data =>{
+            if(data){
+               this.dialogRef.close();
             }
         })
     }

@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { InventoryModel } from '../models/InventoryModel';
 import { WizardService } from '../authentication/signup-wizard/wizard.service';
 import { UserService } from './user.service';
+import {BulletBankService} from "./bullet-bank.service";
+import {BulletsPerSubscription, PurchasesId} from "./purchase.service";
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +19,7 @@ export class ApiService {
     // BASE_URL = 'htttp:/127.0.0.1:5001/';
     // BACKOFFICE_URL = 'http://192.168.0.104:9080/';
 
-    constructor(private http: HttpClient, private srvWizard: WizardService, private srvUser: UserService) {
+    constructor(private http: HttpClient, private srvWizard: WizardService, private srvUser: UserService,private bulletBankService:BulletBankService) {
     }
 
     ping(): Observable<any> {
@@ -112,7 +114,12 @@ export class ApiService {
                 'Content-Type': 'application/json'
             }
         }).subscribe(async () => {
-            console.log('uploadSubscription => done');
+            console.log('uploadSubscription => done,data" ' ,data);
+            if(data.id === PurchasesId.twoSessionSub){
+             this.bulletBankService.setNumberOfBullets(BulletsPerSubscription.small);
+            }else if(data.id === PurchasesId.sixSessions){
+                this.bulletBankService.setNumberOfBullets(BulletsPerSubscription.big);
+            }
             this.srvWizard.afterSubscriptionDone.next(data);
         }, (errr) => {
             console.log('uploadSubscription => error', errr);

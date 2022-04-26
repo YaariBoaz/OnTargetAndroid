@@ -13,9 +13,9 @@ export class SubscriptionPage implements OnInit {
     private srvWizard: WizardService,
     private modalCtrl: ModalController
   ) {
-    this.srvWizard.afterSubscriptionDone.subscribe(() => {
-      this.modalCtrl.dismiss();
-    });
+    this.srvWizard.afterSubscriptionDone.subscribe((data) => {
+
+     });
   }
 
   ngOnInit() {

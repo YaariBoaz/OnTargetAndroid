@@ -21,12 +21,10 @@
                     </p>
                     <div class="price">
                         <p class="price-amount">{{ item.price }}</p>
-                        <ng-container *ngIf="!isAndroid">
-                            <div class="container-price">
-                                <p>/</p>
-                                <p>{{ item.title ? item.title: item.type }}</p>
-                            </div>
-                        </ng-container>
+                        <div class="container-price">
+                            <p>/</p>
+                            <p>{{ item.title ?item.title:item.type }}</p>
+                        </div>
 
                     </div>
                     <p class="for-free">{{ item.description }}</p>

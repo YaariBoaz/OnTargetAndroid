@@ -12,6 +12,7 @@ import {TargetType} from '../shared/drill/constants';
 import {BalisticCalculatorService} from '../shared/services/balistic-calculator.service';
 import {GatewayService} from '../shared/services/gateway.service';
 import {Backgrounds} from '../shared/drill/drill.component';
+import {BulletBankService} from "../shared/services/bullet-bank.service";
 
 @Component({
     selector: 'app-tab2',
@@ -60,6 +61,7 @@ export class Tab2Page implements OnInit {
 
     constructor(public modalController: ModalController,
                 public alertController: AlertController,
+                private bulletBankService: BulletBankService,
                 private initService: InitService,
                 private shootingService: ShootingService,
                 private nativePageTransitions: NativePageTransitions,
@@ -164,17 +166,20 @@ export class Tab2Page implements OnInit {
 
 
     startSesstion() {
-        this.drill.drillType = this.drillType;
-        if (this.drill.drillType === this.drillTypeEnum.Zero) {
-            this.shootingService.setIsZero(true);
+        if (this.bulletBankService.getNumberOfBulletsRemaining() - this.drill.numOfBullets  <= 0) {
+            this.shoNotEnoughBulletsAlert();
         } else {
-            this.shootingService.setIsZero(false);
+            this.drill.drillType = this.drillType;
+            if (this.drill.drillType === this.drillTypeEnum.Zero) {
+                this.shootingService.setIsZero(true);
+            } else {
+                this.shootingService.setIsZero(false);
+            }
+            this.shootingService.drillStarteEvent.next(true);
+            this.shootingService.selectedDrill = this.drill;
+            this.shootingService.numberOfBullersPerDrill = this.drill.numOfBullets;
+            this.router.navigateByUrl('drill');
         }
-        this.shootingService.drillStarteEvent.next(true);
-        this.shootingService.selectedDrill = this.drill;
-        this.shootingService.numberOfBullersPerDrill = this.drill.numOfBullets;
-        this.router.navigateByUrl('drill');
-
     }
 
     async showLongRangeAlert() {
@@ -182,6 +187,17 @@ export class Tab2Page implements OnInit {
             header: 'Wifi Error',
             subHeader: 'Wifi not connected to gateway',
             message: 'Please connect to long-range-target',
+            buttons: ['OK']
+        });
+
+        await alert.present();
+    }
+
+    async shoNotEnoughBulletsAlert() {
+        const alert = await this.alertController.create({
+            header: 'NOT ENOUGH BULLETS',
+            message: 'Unfortunatly, The amount of bullets you are tyring to shoot overlaps the amount of bullets you have.' + '\n' +
+                'You can buy more bullets Or try shooting less bullets.',
             buttons: ['OK']
         });
 

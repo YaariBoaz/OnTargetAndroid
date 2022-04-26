@@ -97,6 +97,7 @@ EOM
   esac
 }
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_resource "${PODS_ROOT}/../../capacitor-cordova-ios-plugins/resources/appbeep.wav"
   install_resource "${PODS_ROOT}/../../capacitor-cordova-ios-plugins/resources/Default-568h@2x.png"
   install_resource "${PODS_ROOT}/../../capacitor-cordova-ios-plugins/resources/Reader-Button-H.png"
   install_resource "${PODS_ROOT}/../../capacitor-cordova-ios-plugins/resources/Reader-Button-H@2x.png"
@@ -125,6 +126,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_resource "${PODS_ROOT}/../../capacitor-cordova-ios-plugins/resources/PEPhotoCropEditor.bundle"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_resource "${PODS_ROOT}/../../capacitor-cordova-ios-plugins/resources/appbeep.wav"
   install_resource "${PODS_ROOT}/../../capacitor-cordova-ios-plugins/resources/Default-568h@2x.png"
   install_resource "${PODS_ROOT}/../../capacitor-cordova-ios-plugins/resources/Reader-Button-H.png"
   install_resource "${PODS_ROOT}/../../capacitor-cordova-ios-plugins/resources/Reader-Button-H@2x.png"

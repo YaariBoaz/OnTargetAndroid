@@ -26,9 +26,7 @@
   "swift_versions": "5.1",
   "weak_frameworks": [
     "Social",
-    "MessageUI",
-    "AdSupport",
-    "AppTrackingTransparency"
+    "MessageUI"
   ],
   "frameworks": [
     "CoreBluetooth",

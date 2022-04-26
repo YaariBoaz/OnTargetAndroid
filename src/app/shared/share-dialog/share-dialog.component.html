@@ -1,179 +1,97 @@
-<section id="image-section" class="drill-results" #shareDiv>
-    <header>
-        <div class="info">
-            <div>
-                <img src="../../../assets/icons/center-align.png"/>
-                <p *ngIf="train.groupingNumber !==0">{{train.groupingNumber | number : '1.2-2'}}</p>
-            </div>
-            <div style="display: flex;width: 200px;justify-content: center;">
-                <p>{{train.totalTime}}</p>
-            </div>
-            <div>
-                <img src="assets/icons/distance.svg">
-                <p>{{train.range}} Y</p>
-            </div>
-            <div mat-dialog-close> X</div>
+<section #shareDiv id="shareDiv">
+    <img class="bg" src="assets/share-bg2.jpg" alt="">
+    <div class="total-time-wrapper">
+        <div class="hits-wanted">
+            <span>{{train.rawHitsLocation.length}} / </span>
+            <span>{{train.numberOfBullets}}</span>
         </div>
-    </header>
-    <div class="main-screen">
-        <div class="target" *ngIf="isHitNoHit">
-            <div class="some-wrapper">
-                <img src="assets/bullseye-finish.png">
-                <div class="counter-shot white">{{train.shotNumber}}</div>
+        <div class="quiz-medal">
+            <div class="quiz-medal__circle quiz-medal__circle--gold">
+        <span>
+          1
+        </span>
             </div>
+            <div class="quiz-medal__ribbon quiz-medal__ribbon--left"></div>
+            <div class="quiz-medal__ribbon quiz-medal__ribbon--right"></div>
         </div>
-        <div class="target" *ngIf="!isHitNoHit">
-            <div style="display: flex;align-items: center;justify-content: space-evenly;width: 82%;">
-                <div class="target-container" [style.width.px]="madadToUse" [style.height.px]="madadToUse">
-                    <div class="64" *ngIf="train.targetType == targetTypeEnum.Type_64">
-                        <div *ngIf="train?.drillType == drillTypeEnum.Regular" [style.width.px]="madadToUse"
-                             [style.height.px]="madadToUse"
-                             style="background-color: white;border-radius: 100%;">
-                            <img [style.width.px]="madadToUse" [style.height.px]="madadToUse"
-                                 src="assets/targets/64/e64_score_finish.png">
-                        </div>
-                        <div *ngIf="train?.drillType == drillTypeEnum.HitNoHit" style="width: 312px; height: 312px;"
-                             [style.width.px]="madadToUse" [style.height.px]="madadToUse"
-                             style="background-color: white;border-radius: 100%;">">
-                            <img [style.width.px]="madadToUse" [style.height.px]="madadToUse"
-                                 src="assets/targets/64/e64_score_finish.png">
-                        </div>
-                        <div *ngIf="train?.drillType == drillTypeEnum.Zero" [style.width.px]="madadToUse"
-                             [style.height.px]="madadToUse" style="background-color: white">
-                            <img [style.width.px]="madadToUse" [style.height.px]="madadToUse"
-                                 src="assets/targets/64/e64_Zero_finish.png">
-                        </div>
-                        <div *ngIf="train?.drillType == drillTypeEnum.Hostage">
-                            <img [style.width.px]="madadToUse" [style.height.px]="madadToUse"
-                                 src="assets/targets/64/Hostage_png_e64_finish.png">
-                        </div>
-                    </div>
-                    <div class="128" *ngIf="train.targetType == targetTypeEnum.Type_128">
-                        <div *ngIf="train?.drillType == drillTypeEnum.Regular">
-                            <img [style.width.px]="madadToUse" [style.height.px]="madadToUse"
-                                 src="assets/targets/128/e128_score_finish.png">
-                        </div>
-                        <div *ngIf="train?.drillType == drillTypeEnum.Zero">
-                            <img [style.width.px]="madadToUse" [style.height.px]="madadToUse"
-                                 src="assets/targets/128/e128_zero.png">
-                        </div>
-                        <div *ngIf="train?.drillType == drillTypeEnum.Hostage">
-
-                            <img [style.width.px]="madadToUse" [style.height.px]="madadToUse"
-                                 src="assets/targets/128/e128_Hostage_Finish.png">
-                        </div>
-                    </div>
-                    <div [class.isBarhan]="shot.isBarhan" class="hit" *ngFor="let shot of train.shots; let i = index"
-                         [class.lastShot]="i == train.shots.length -1"
-                         style="position: absolute;"
-                         [style.top.px]=shot.y [style.left.px]=shot.x>
-                        {{i + 1}}
-                    </div>
-                    <ng-template *ngIf="train?.drillType == drillTypeEnum.Zero">
-                        <div *ngFor="let shot of train.shotsThatAreNotCounted; let i = index"
-                             style="position: absolute;"
-                             [class.napar]="shot.isNapar" [class.napam]="shot.isNapam"
-                             [style.top.px]=shot.y [style.left.px]=shot.x>
-                        </div>
-                    </ng-template>
-                </div>
-                <img class="mission-finish" src="assets/icons/drll-share.png"/>
-                <div class="avatar" *ngIf="profile.img">
-                    <img *ngIf="profile.img" [src]="profile.img">
-                </div>
-            </div>
-        </div>
-        <p class="squar-info" style="position: absolute;top: 0;left:10px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                <defs>
-                    <style>
-                        .cls-3 {
-                            fill: #fff
-                        }
-                    </style>
-                </defs>
-                <g id="Icon_Favorite_Filled" data-name="Icon / Favorite / Filled"
-                   transform="translate(-2 -1)">
-                    <path id="Box" fill="none" d="M0 0H24V24H0z" transform="translate(2 1)"/>
-                    <rect id="Rectangle_1747" width="24" height="24" fill="#373737"
-                          data-name="Rectangle 1747" rx="5" transform="translate(2 1)"/>
-                    <g id="_002-bullet" data-name="002-bullet" transform="translate(6.164 5)">
-                        <path id="Path_1178"
-                              d="M15.689.136A.464.464 0 0 0 15.361 0h-.007A6.58 6.58 0 0 0 11.3 1.58l-1.7.851a.463.463 0 0 0-.12.087L1.5 10.5a.463.463 0 0 0-.141.183L.838 11.9l-.046-.046a.464.464 0 0 0-.656.656l3.177 3.177a.464.464 0 0 0 .656-.656l-.046-.046 1.223-.522a.463.463 0 0 0 .183-.141l7.978-7.978a.463.463 0 0 0 .087-.12l.851-1.7A6.58 6.58 0 0 0 15.824.471a.463.463 0 0 0-.136-.335zM3.217 14.28l-1.672-1.672.4-.935 2.208 2.208zm1.745-.9l-2.517-2.517L9.807 3.5l2.516 2.516zm7.892-8.144l-2.265-2.264.888-.446L13.3 4.347zm.989-1.656l-1.6-1.6A5.644 5.644 0 0 1 14.85.976a5.607 5.607 0 0 1-1.008 2.603z"
-                              class="cls-3" data-name="Path 1178" transform="translate(-.001)"/>
-                        <path id="Path_1179"
-                              d="M213.051 237.636l-1.007 1.007a.464.464 0 0 0 .656.656l1.007-1.007a.464.464 0 0 0-.656-.656z"
-                              class="cls-3" data-name="Path 1179"
-                              transform="translate(-205.358 -230.16)"/>
-                    </g>
-                </g>
-            </svg>
-            {{train.stats?.length}} of {{train?.numOfBullets}}</p>
-        <p class="squar-info"
-           style="position: absolute;top: 0;right: 10px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                <g id="Icon_Favorite_Filled" data-name="Icon / Favorite / Filled"
-                   transform="translate(-.057)">
-                    <path id="Box" fill="none" d="M0 0H18V18H0z" transform="translate(3.057 3)"/>
-                    <rect id="Rectangle_1867" width="24" height="24" fill="#363636"
-                          data-name="Rectangle 1867" rx="5" transform="translate(.057)"/>
-                    <path id="_005-split" fill="#fff"
-                          d="M11.985 2.209L9.776 0 7.567 2.209l.663.663 1.078-1.078v1.89a2.354 2.354 0 0 1-.808 1.78L6.66 7.055a3.355 3.355 0 0 0-.671.795 3.2 3.2 0 0 0-.659-.79l-1.84-1.6a2.354 2.354 0 0 1-.813-1.78V1.794l1.078 1.078.663-.663L2.209 0 0 2.209l.663.663L1.74 1.794v1.89a3.291 3.291 0 0 0 1.136 2.488l1.84 1.595a2.346 2.346 0 0 1 .8 1.77V12h.937V9.542a2.36 2.36 0 0 1 .824-1.78l1.832-1.59a3.291 3.291 0 0 0 1.136-2.488v-1.89l1.078 1.078zm0 0"
-                          data-name="005-split" transform="translate(5.937 6)"/>
-                </g>
-            </svg>
-            {{train.summaryObject?.split }}
-        </p>
-        <p class="squar-info"
-           style="position: absolute;bottom: 0;left: 10px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                <defs>
-                    <style>
-                        .cls-3 {
-                            fill: #fff
-                        }
-                    </style>
-                </defs>
-                <g id="Icon_Favorite_Filled" data-name="Icon / Favorite / Filled"
-                   transform="translate(.123)">
-                    <path id="Box" fill="none" d="M0 0H18V18H0z" transform="translate(2.877 3)"/>
-                    <rect id="Rectangle_1865" width="24" height="24" fill="#363636"
-                          data-name="Rectangle 1865" rx="5" transform="translate(-.123)"/>
-                    <g id="_004-aim" data-name="004-aim" transform="translate(4.902 5.25)">
-                        <path id="Path_1182"
-                              d="M7.516 13.281a5.766 5.766 0 1 1 5.766-5.766 5.772 5.772 0 0 1-5.766 5.766zm0-10.406a4.641 4.641 0 1 0 4.641 4.641 4.646 4.646 0 0 0-4.641-4.641z"
-                              class="cls-3" data-name="Path 1182"
-                              transform="translate(-.766 -.766)"/>
-                        <path id="Path_1183"
-                              d="M11.563 3.094A.563.563 0 0 1 11 2.531V.563a.563.563 0 0 1 1.125 0v1.968a.563.563 0 0 1-.562.563z"
-                              class="cls-3" data-name="Path 1183" transform="translate(-4.813)"/>
-                        <path id="Path_1184"
-                              d="M21.031 12.125h-1.968a.563.563 0 0 1 0-1.125h1.969a.563.563 0 0 1 0 1.125z"
-                              class="cls-3" data-name="Path 1184"
-                              transform="translate(-8.094 -4.813)"/>
-                        <path id="Path_1185"
-                              d="M11.563 21.594a.563.563 0 0 1-.563-.563v-1.968a.563.563 0 0 1 1.125 0v1.969a.563.563 0 0 1-.562.562z"
-                              class="cls-3" data-name="Path 1185"
-                              transform="translate(-4.813 -8.094)"/>
-                        <path id="Path_1186"
-                              d="M2.531 12.125H.563a.563.563 0 0 1 0-1.125h1.968a.563.563 0 0 1 0 1.125z"
-                              class="cls-3" data-name="Path 1186" transform="translate(0 -4.813)"/>
-                        <path id="Path_1187"
-                              d="M10.688 12.375a1.688 1.688 0 1 1 1.688-1.687 1.69 1.69 0 0 1-1.688 1.687zm0-2.25a.563.563 0 1 0 .563.563.563.563 0 0 0-.563-.563z"
-                              class="cls-3" data-name="Path 1187"
-                              transform="translate(-3.938 -3.938)"/>
-                    </g>
-                </g>
-            </svg>
-            {{train.summaryObject?.points }}</p>
-        <p class="squar-info"
-           style="position: absolute;bottom: 0;right: 10px;">
-            <img style="width: 16px;height: 16px"
-                 src="../../../assets/icons/icon_to_center.svg">
-            {{train.summaryObject?.distanceFromCenter}}
-        </p>
     </div>
-</section>
-<button class="share-button" (click)="shareVia()" *ngIf="isNotSharing"> SHARE</button>
 
+
+    <div class="hidden-content-container">
+        <div *ngIf="train.drillType === drillTypeEnum.Regular">
+            <img src="assets/targets/64/e64_score.png">
+        </div>
+        <div *ngIf="train.drillType === drillTypeEnum.Zero">
+            <img src="assets/targets/64/e64_Zero.png">
+        </div>
+        <div *ngIf="train.drillType === drillTypeEnum.Hostage">
+            <img src="assets/targets/64/Hostage_png_e64.png">
+        </div>
+        <div class="hit" *ngFor="let shot of train.rawHitsLocation; let i = index"
+             style="font-size: 14px;
+             position: absolute;
+    background: white;
+    color: black;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px dashed;
+    font-weight: bold;"
+             [style.top.px]=shot.y
+             [style.left.px]=shot.x>
+            {{i + 1}}
+        </div>
+    </div>
+    <section style="
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+">
+        <div class="info-line">
+            <div>
+                <span>Range:</span>
+                <span>{{train.range}} M</span>
+            </div>
+        </div>
+        <div class="info-line">
+            <div>
+                <span>ADFC</span>
+                <span>{{train.avgDistFromCenter}}</span>
+            </div>
+        </div>
+    </section>
+    <section style="
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+">
+        <div class="info-line">
+            <div>
+                <span>Split Avg</span>
+                <span>{{train.splitAvg / 1000}} sec</span>
+            </div>
+        </div>
+        <div class="info-line">
+            <div>
+                <span>TT</span>
+                <span>{{train.timeElapsed}}</span>
+            </div>
+        </div>
+    </section>
+</section>
+<div class="top-row">
+    <div>
+        <div class="logoList">
+            <button (click)="shareVia()">
+                Share
+            </button>
+
+        </div>
+    </div>
+</div>
 
