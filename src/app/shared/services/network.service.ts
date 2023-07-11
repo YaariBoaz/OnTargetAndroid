@@ -18,16 +18,16 @@ export class NetworkService {
         if (!this.hasConnection) {
             return false;
         } else {
-            this.apiService.ping().subscribe(
-                data => {
-                    this.hasConnection = true;
-                    this.notifyConnectionChanged();
-                },
-                error => {
-                    this.hasConnection = false;
-                    this.notifyConnectionChanged();
-                }
-            );
+            // this.apiService.ping().subscribe(
+            //     data => {
+            //         this.hasConnection = true;
+            //         this.notifyConnectionChanged();
+            //     },
+            //     error => {
+            //         this.hasConnection = false;
+            //         this.notifyConnectionChanged();
+            //     }
+            // );
         }
     }
 

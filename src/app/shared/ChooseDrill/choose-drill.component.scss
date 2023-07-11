@@ -1,47 +1,52 @@
-section {
-  height: 100%;
-  header {
-    height: 56px;
-    display: flex;
-    background: pink;
-    align-items: center;
-
-    .back-container {
-      height: 56px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 30px;
-      width: 56px;
-      position: absolute;
-      left: 0;
-    }
-
-    .title {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-    }
-  }
-
-  .content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    justify-content: space-evenly;
-    align-items: center;
-
-    img {
-      height: 200px;
-      width: 60%;
-      box-shadow: 10px 10px 5px #ccc;
-      -moz-box-shadow: 10px 10px 5px #ccc;
-      -webkit-box-shadow: 10px 10px 5px #ccc;
-      -khtml-box-shadow: 10px 10px 5px #ccc;
-    }
-
-  }
+ion-header{
+  border-bottom: 2px solid #ffffff61;
 }
-.matdialogStyle{
-  height: 100vh;
+section{
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+ .shooting-type{
+   display: flex;
+   justify-content: center;
+   width: 100%;
+   padding: 0.5em;
+   .tabs{
+     height: 56px;
+     width: 98%;
+     display: flex;
+     flex-direction: row;
+     justify-content: center;
+     background: #fce651;
+     text-align: center;
+     font-size: 25px;
+     font-weight: lighter;
+     color: black;
+     div{
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       border-bottom: 2px solid #ffffff1a;
+       word-spacing: 20px;
+       text-align: center;
+       width:25%;
+       span{
+         color: #ffffffb5;
+         font-weight: bold;
+         font-size: 12px;
+         word-spacing: 50px
+       }
+     }
+     div:first-child{
+       border-top: 2px solid  #ffffff1a;
+     }
+     .selectedTab{
+       border-bottom: 4px solid #ff0;
+     }
+   }
+ }
+
+  .content{
+    width: 100%;
+    height: calc(100% - 112px);
+  }
 }

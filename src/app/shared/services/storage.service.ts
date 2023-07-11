@@ -10,7 +10,7 @@ import {BleService} from './ble.service';
     providedIn: 'root'
 })
 export class StorageService {
-
+    notifyTargetListChanged = new BehaviorSubject(JSON.parse(localStorage.getItem('ble')));
     DEFAULT_DATA: DashboardModel = new DashboardModel();
     data = {};
     DATA_NAME = 'homeData';
@@ -66,6 +66,9 @@ export class StorageService {
         }
         this.data[key] = value;
         localStorage.setItem(key, JSON.stringify(value));
+        if(key === 'ble'){
+            this.notifyTargetListChanged.next(value);
+        }
     }
 
 

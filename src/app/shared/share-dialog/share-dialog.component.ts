@@ -1,6 +1,6 @@
 import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {DrillType} from '../../tab2/tab2.page';
+import {DrillType} from '../../custom-drill/custom-drill.page';
 import {ModalController} from '@ionic/angular';
 import {SocialSharing} from '@ionic-native/social-sharing/ngx';
 import domtoimage from 'dom-to-image';

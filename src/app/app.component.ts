@@ -119,6 +119,7 @@ export class AppComponent implements OnDestroy, OnInit {
 
             }
         });
+        this.ble.scan();
     }
 
 

@@ -4,7 +4,6 @@ import {InventoryModel} from '../../models/InventoryModel';
 import {ApiService} from '../../services/api.service';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {StorageService} from '../../services/storage.service';
-import {Tab3Service} from '../../../tab3/tab3.service';
 import {UserService} from '../../services/user.service';
 import {Router} from '@angular/router';
 import {Observable} from 'rxjs';
@@ -31,7 +30,6 @@ export class WizardService {
 
     constructor(private apiService: ApiService,
                 private storageService: StorageService,
-                private tab3Service: Tab3Service,
                 private http: HttpClient,
                 private initService: InitService,
                 private userService: UserService,

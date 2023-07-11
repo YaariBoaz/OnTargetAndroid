@@ -3,7 +3,7 @@ import {MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 import {ChallengesService} from '../challenges.service';
 import {Router} from '@angular/router';
 import {ShootingService} from '../../services/shooting.service';
-import {DrillType} from '../../../tab2/tab2.page';
+import {DrillType} from '../../../custom-drill/custom-drill.page';
 import {TargetType} from '../../drill/constants';
 
 @Component({
@@ -16,30 +16,122 @@ export class ChallengeListComponent implements OnInit {
     activeTab = 'rifle';
     @HostListener('window:beforeunload')
     optionsToRender = {
-        rifle: [],
+        rifle: [
+            {
+            range: 10,
+            challengeRank:{
+                rank:3,
+                challengers:12
+            },
+            metadata:{
+                title:'Shoot As Fast As You Can',
+                numberOfBullets: 10,
+                FastTrigger: 'string',
+                useSplitTime: false,
+                useTotalTime: true,
+                useHighestScore: false,
+                dateCreated: '2022-01-12T10:44:55.431Z',
+                isActive: true,
+                bgId:1
+            },
+        },
+            {
+                range: 10,
+                challengeRank:{
+                    rank:3,
+                    challengers:12
+                },
+                metadata:{
+                    title:'Shoot As Fast As You Can',
+                    numberOfBullets: 10,
+                    FastTrigger: 'string',
+                    useSplitTime: false,
+                    useTotalTime: true,
+                    useHighestScore: false,
+                    dateCreated: '2022-01-12T10:44:55.431Z',
+                    isActive: true,
+                    bgId:2
+                },
+            },
+            {
+                range: 10,
+                challengeRank:{
+                    rank:3,
+                    challengers:12
+                },
+                metadata:{
+                    title:'Shoot As Fast As You Can',
+                    numberOfBullets: 10,
+                    FastTrigger: 'string',
+                    useSplitTime: false,
+                    useTotalTime: true,
+                    useHighestScore: false,
+                    dateCreated: '2022-01-12T10:44:55.431Z',
+                    isActive: true,
+                    bgId:3
+                },
+            },
+            {
+                range: 10,
+                challengeRank:{
+                    rank:3,
+                    challengers:12
+                },
+                metadata:{
+                    title:'Shoot As Fast As You Can',
+                    numberOfBullets: 10,
+                    FastTrigger: 'string',
+                    useSplitTime: false,
+                    useTotalTime: true,
+                    useHighestScore: false,
+                    dateCreated: '2022-01-12T10:44:55.431Z',
+                    isActive: true,
+                    bgId:4
+                },
+            },
+            {
+                range: 10,
+                challengeRank:{
+                    rank:3,
+                    challengers:12
+                },
+                metadata:{
+                    title:'Shoot As Fast As You Can',
+                    numberOfBullets: 10,
+                    FastTrigger: 'string',
+                    useSplitTime: false,
+                    useTotalTime: true,
+                    useHighestScore: false,
+                    dateCreated: '2022-01-12T10:44:55.431Z',
+                    isActive: true,
+                    bgId:5
+                },
+            }
+        ],
         pistol: [],
     };
-    challenges;
+    challenges  = [];
 
-    constructor(private elementRef: ElementRef,
+
+
+constructor(private elementRef: ElementRef,
                 private router: Router, private shootingService: ShootingService, private challengesService: ChallengesService) {
 
     }
 
     ionViewWillEnter() {
-        this.challenges = [];
-        this.optionsToRender.pistol = [];
+         this.optionsToRender.pistol = [];
         this.optionsToRender.rifle = [];
-        this.challengesService.getMyChallenges().subscribe(data => {
-            this.challenges = data;
-            this.challenges.forEach(item => {
-                if (item.metadata.usePistol) {
-                    this.optionsToRender.pistol.push(item);
-                } else {
-                    this.optionsToRender.rifle.push(item);
-                }
-            });
-        });
+        // this.challengesService.getMyChallenges().subscribe(data => {
+        //     this.challenges = data;
+        //     this.challenges.forEach(item => {
+        //         if (item.metadata.usePistol) {
+        //             this.optionsToRender.pistol.push(item);
+        //         } else {
+        //             this.optionsToRender.rifle.push(item);
+        //         }
+        //     });
+        // });
     }
 
 
@@ -111,14 +203,17 @@ export class ChallengeListComponent implements OnInit {
     }
 
     getBackgroundImage(item: any) {
-        if (item.metadata.bgId === 0) {
-            return 'url(assets/backgrounds/desert.png)';
-        } else if (item.metadata.bgId === 1) {
-            return 'url(assets/backgrounds/snow.png)';
+        if (item.metadata.bgId === 1) {
+            return 'url(assets/challenges/sodlier-avg-split.png)';
         } else if (item.metadata.bgId === 2) {
-            return 'url(assets/backgrounds/warehouse.png';
+            return 'url(assets/challenges/soldier-againt-the-clock.png)';
+        } else if (item.metadata.bgId === 3) {
+            return 'url(assets/challenges/soldier-fast.png';
+        }
+        else if (item.metadata.bgId === 4) {
+            return 'url(assets/challenges/soldier-shoot-fast.png';
         } else {
-            return 'url(assets/backgrounds/forest.png)';
+            return 'url(assets/challenges/soldier-score.png)';
         }
     }
 

@@ -10,7 +10,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
 import {StorageService} from './shared/services/storage.service';
 import {InitService} from './shared/services/init.service';
-import {Tab1Service} from './tab1/tab1-service.service';
+import {Tab1Service} from './dashboard/dashboard.service';
 import {UserService} from './shared/services/user.service';
 import {BLE} from '@awesome-cordova-plugins/ble/ngx';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -29,19 +29,24 @@ import {NgxCaptureModule} from 'ngx-capture';
 import {AndroidPermissions} from '@awesome-cordova-plugins/android-permissions/ngx';
 import {HammerModule} from '@angular/platform-browser';
 import {ActivityLogComponent} from './shared/activity-log/activity-log.component';
-import {Tab1PageModule} from './tab1/tab1.module';
-import {Tab2PageModule} from './tab2/tab2.module';
+import {Tab1PageModule} from './dashboard/dashboard.module';
+import {Tab2PageModule} from './custom-drill/custom-drill.module';
 import {PurchaseService} from './shared/services/purchase.service';
 import {DrillModule} from './shared/drill/drill.module';
 import {ApiService} from './shared/services/api.service';
 import {BulletBankService} from './shared/services/bullet-bank.service';
 import { InAppPurchase2 } from '@awesome-cordova-plugins/in-app-purchase-2/ngx';
+import {AdvanceSettingsComponent} from './custom-drill/advance-settings/advance-settings.component';
+import {TabsPage} from './tabs/tabs.page';
+import {TabsService} from './tabs/tabs.service';
+import {ProfileComponent} from './profile/profile.component';
+import {FeedComponent} from './feed/feed.component';
 
 
 // @ts-ignore
 @NgModule({
-    declarations: [AppComponent, ActivityLogComponent],
-    entryComponents: [ErrorModalComponent],
+    declarations: [AppComponent, ActivityLogComponent,AdvanceSettingsComponent,TabsPage,ProfileComponent,FeedComponent],
+    entryComponents: [ErrorModalComponent,AdvanceSettingsComponent],
     imports: [
         BrowserModule,
         HammerModule,
@@ -79,7 +84,8 @@ import { InAppPurchase2 } from '@awesome-cordova-plugins/in-app-purchase-2/ngx';
         Crop,
         PurchaseService,
         InAppPurchase2,
-        BulletBankService
+        BulletBankService,
+        TabsService
     ],
     exports: [MaterialModule],
     bootstrap: [AppComponent]

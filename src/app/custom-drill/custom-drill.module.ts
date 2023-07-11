@@ -1,0 +1,38 @@
+import {IonicModule} from '@ionic/angular';
+import {RouterModule} from '@angular/router';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {CustomDrillPage} from './custom-drill.page';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatIconModule} from '@angular/material/icon';
+import {DrillComponent} from '../shared/drill/drill.component';
+import {SharedModule} from '../shared/shared.module';
+import {DrillModule} from '../shared/drill/drill.module';
+import {BalisticCalculatorComponent} from './balistic-calculator/balistic-calculator.component';
+import {ChooseDrillComponent} from '../shared/ChooseDrill/choose-drill.component';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MaterialModule} from '../shared/material/material.module';
+
+// @ts-ignore
+// @ts-ignore
+// @ts-ignore
+@NgModule({
+    imports: [
+        IonicModule,
+        MatIconModule,
+        CommonModule,
+        FormsModule,
+        MaterialModule,
+        SharedModule,
+        MatMenuModule,
+],
+    providers: [],
+    declarations: [CustomDrillPage, BalisticCalculatorComponent, ChooseDrillComponent],
+    entryComponents: [],
+    exports: [
+        CustomDrillPage
+    ]
+})
+export class Tab2PageModule {
+}

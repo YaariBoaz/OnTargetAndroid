@@ -1,0 +1,42 @@
+
+    <section class="dashboard">
+        <div class="user-info">
+            <div class="profile-pic-wrapper">
+            <img class="profile-pic" src="assets/ben.jpg">
+            </div>
+            <div class="text-info">
+                <div class="name">
+                    <span>Jon Jones</span>
+                    <span>
+                        <img src="assets/usa-shield.png"/>
+                    </span>
+                </div>
+                <div class="rank">
+                    <span>Current Rank</span>
+                    <img src="assets/rank-demo.png">
+                </div>
+            </div>
+        </div>
+        <div class="histogram-container">
+           <canvas baseChart style="display: block; width: 500px; height: 400px;"
+                        [datasets]="radarChartDatasets"
+                        [options]="radarChartOptions"
+                        [labels]="radarChartLabels"
+                        [chartType]="'radar'"
+                >
+                </canvas>
+        </div>
+        <div class="charts-container">
+            <div> 1 </div>
+            <div> 1 </div>
+            <div> 1 </div>
+            <div> 1 </div>
+        </div>
+    </section>
+
+
+
+<!--        </header>-->
+
+
+

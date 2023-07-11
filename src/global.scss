@@ -23,32 +23,72 @@
 @import "~@ionic/angular/css/flex-utils.css";
 @import "assets/colors";
 
-@font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 700;
-  src: url("assets/fonts/Roboto-Bold.ttf");
+
+ion-content{
+  --ion-background-color:transparent;
+}ion-header{
+  --ion-background-color:transparent;
+}
+@media only screen
+and (device-width : 375px)
+and (device-height : 812px)
+and (-webkit-device-pixel-ratio : 3) {
+  body{
+    padding-top: constant(safe-area-inset-top) !important;//for iOS 11.2
+    padding-top: env(safe-area-inset-top);//for iOS 11.1
+  }
+
 }
 
+
+//@font-face {
+//  font-family: 'Roboto';
+//  font-style: normal;
+//  font-weight: 700;
+//  src: url("assets/fonts/Roboto-Bold.ttf");
+//}
+//
+//@font-face {
+//  font-family: 'Roboto';
+//  font-style: normal;
+//  font-weight: 400;
+//  src: url("assets/fonts/Roboto-Regular.ttf");
+//}
+
+//@font-face {
+//  font-family: 'Roboto';
+//  font-style: normal;
+//  font-weight: 300;
+//  src: url("assets/fonts/Roboto-Thin.ttf");
+//}
+
+
 @font-face {
-  font-family: 'Roboto';
+  font-family: 'Bruno Ace SC', cursive;
   font-style: normal;
   font-weight: 400;
-  src: url("assets/fonts/Roboto-Regular.ttf");
+  src: url("assets/fonts/BrunoAceSC-Regular.ttf");
+}
+@font-face {
+  font-family: 'Bruno Ace SC', cursive;
+  font-style: normal;
+  font-weight: 700;
+  src: url("assets/fonts/BrunoAceSC-Regular.ttf");
 }
 
 @font-face {
-  font-family: 'Roboto';
+  font-family: 'Bruno Ace SC', cursive;
   font-style: normal;
   font-weight: 300;
-  src: url("assets/fonts/Roboto-Thin.ttf");
+  src: url("assets/fonts/BrunoAceSC-Regular.ttf");
 }
 
 body, html {
   margin: 0;
   height: 100%;
-  font-family: 'Roboto', sans-serif;
-  background: radial-gradient(71.47% 224.04% at 19.09% 13.6%, #404658 0%, #161820 100%);
+  font-family: 'Bruno Ace SC', cursive;
+  background-color: #2d3436;
+  background-image: linear-gradient(315deg, #2d3436 0%, #000000 74%);
 }
 
 .ion-app {
@@ -234,7 +274,7 @@ mat-tab-header {
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    -webkit-transform: translate3d(0, 100%, 0);
+    -webkit-transfo: translate3d(0, 100%, 0);
     transform: translate3d(0, 100%, 0);
   }
 

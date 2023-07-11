@@ -4,7 +4,6 @@ import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/form
 import {StorageService} from '../../services/storage.service';
 import {ApiService} from '../../services/api.service';
 import {ActionSheetController, AlertController, LoadingController, Platform} from '@ionic/angular';
-import {Tab3Service} from '../../../tab3/tab3.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import {WizardService} from '../signup-wizard/wizard.service';
 import {NativePageTransitions, NativeTransitionOptions} from '@ionic-native/native-page-transitions/ngx';
@@ -57,7 +56,6 @@ export class SignupComponent implements OnInit {
                 private router: Router,
                 private formBuilder: FormBuilder,
                 private platform: Platform,
-                private tab3Service: Tab3Service,
                 private nativePageTransitions: NativePageTransitions,
                 private ref: ChangeDetectorRef,
                 private http:HttpClient,
@@ -227,7 +225,6 @@ export class SignupComponent implements OnInit {
         this.submitted = true;
         if (!this.registerForm.errors) {
             this.wizardService.registerForm = this.registerForm;
-            this.tab3Service.passProfileFromRegister.next(this.registerForm.value);
             this.stepTwoComplete.emit(this.registerForm);
         } else {
             // tslint:disable-next-line:no-unused-expression

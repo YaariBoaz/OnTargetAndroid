@@ -76,11 +76,11 @@
 import {PreloadAllModules, RouterModule, Routes} from &#x27;@angular/router&#x27;;
 import {AuthGuardService} from &#x27;./shared/authentication/auth-guard.service&#x27;;
 import {NewTargetDesignComponent} from &#x27;./shared/components/new-target-design/new-target-design.component&#x27;;
-import {Tab1Page} from &#x27;./tab1/tab1.page&#x27;;
+import {DashboardPage} from &#x27;./tab1/tab1.page&#x27;;
 import {SelectTargetComponent} from &#x27;./shared/select-target-modal/select-target-component&#x27;;
 import {ChooseDrillComponent} from &#x27;./shared/ChooseDrill/choose-drill.component&#x27;;
 import {ChallengeListComponent} from &#x27;./shared/ChooseDrill/List/challenge-list.component&#x27;;
-import {Tab2Page} from &#x27;./tab2/tab2.page&#x27;;
+import {CustomDrillPage} from &#x27;./tab2/tab2.page&#x27;;
 
 // const routes: Routes &#x3D; [
 //   { path: &#x27;&#x27;, redirectTo: &#x27;home&#x27;, pathMatch: &#x27;full&#x27; },
@@ -89,7 +89,7 @@ import {Tab2Page} from &#x27;./tab2/tab2.page&#x27;;
 const routes: Routes &#x3D; [
     {
         path: &#x27;home&#x27;,
-        component: Tab1Page,
+        component: DashboardPage,
 
     },
     {
@@ -103,7 +103,7 @@ const routes: Routes &#x3D; [
 
     }, {
         path: &#x27;editDrill&#x27;,
-        component: Tab2Page,
+        component: CustomDrillPage,
 
     },
     {path: &#x27;new-target&#x27;, component: NewTargetDesignComponent},

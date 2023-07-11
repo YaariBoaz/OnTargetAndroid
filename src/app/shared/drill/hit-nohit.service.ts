@@ -4,7 +4,7 @@ import {ShootingService} from '../services/shooting.service';
 import {DashboardModel} from '../models/dashboard-model';
 import {DrillModel, DrillModelHitNoHit} from '../models/DrillModel';
 import {StorageService} from '../services/storage.service';
-import {DrillObject} from '../../tab2/tab2.page';
+import {DrillObject} from '../../custom-drill/custom-drill.page';
 import {UserService} from '../services/user.service';
 import {ApiService} from '../services/api.service';
 import {tap} from 'rxjs/operators';
@@ -250,11 +250,11 @@ export class HitNohitService {
         });
 
         this.storageService.setItem('homeData', updatedData);
-        this.apiService.syncDataHitNoHit(drill).subscribe(data => {
-            this.apiService.getDashboardData(this.userService.getUserId()).subscribe((data1) => {
-                this.storageService.setItem('homeData', data);
-            });
-        });
+        // this.apiService.syncDataHitNoHit(drill).subscribe(data => {
+        //     this.apiService.getDashboardData(this.userService.getUserId()).subscribe((data1) => {
+        //         this.storageService.setItem('homeData', data);
+        //     });
+        // });
 
     }
 
@@ -376,6 +376,7 @@ export class HitNohitService {
                 milisec = totalSeconds.toString().split('.')[1];
                 if (milisec.length >= 2) {
                     milisec = milisec[1] + milisec[2];
+                    // tslint:disable-next-line:radix
                     if (parseInt(milisec) > 60) {
                         totalSeconds += 1;
                         milisec = milisec[1];
@@ -385,8 +386,7 @@ export class HitNohitService {
             const timeString = date.toISOString().substr(11, 8);
             const finalArray = timeString.split(':');
             return finalArray[1] + ':' + finalArray[2] + '.' + milisec;
-            debugger
-        }
+         }
         return null;
     }
 

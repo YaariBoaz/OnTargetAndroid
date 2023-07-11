@@ -62,23 +62,23 @@ export class BalisticCalculatorService {
     }
 
     getZeroTableInit() {
-        this.getZeroTable({
-            ballisticCoefficient: 0.121,
-            initialVelocity: 1190,
-            sightHeight: 2.5,
-            zeroRange: 250,
-            boreAngle: 0,
-            windangle: 90,
-            yIntercept: 0,
-            altitude: 0,
-            barometer: 29.59,
-            temperature: 59,
-            relativeHumidity: 0.5,
-            windSpeed: 0,
-            isMetric: true
-        }).subscribe(data => {
-            this.shootingService.zeroTable = data;
-        });
+        // this.getZeroTable({
+        //     ballisticCoefficient: 0.121,
+        //     initialVelocity: 1190,
+        //     sightHeight: 2.5,
+        //     zeroRange: 250,
+        //     boreAngle: 0,
+        //     windangle: 90,
+        //     yIntercept: 0,
+        //     altitude: 0,
+        //     barometer: 29.59,
+        //     temperature: 59,
+        //     relativeHumidity: 0.5,
+        //     windSpeed: 0,
+        //     isMetric: true
+        // }).subscribe(data => {
+        //     this.shootingService.zeroTable = data;
+        // });
     }
 
 
@@ -211,8 +211,8 @@ export class BalisticCalculatorService {
         const xStep = w / nominalStep;
         const yStep = h / nominalStep;
 
-        let xPos = (xStep * x);
-        let yPos = yStep * y;
+        const xPos = (xStep * x);
+        const yPos = yStep * y;
 
 
         const disPointFromCenter = 1.905 * Math.sqrt(Math.pow((nominalStep / 2 - x), 2) + Math.pow((nominalStep / 2 - y), 2));
@@ -538,34 +538,34 @@ export class BalisticCalculatorService {
     }
 
 
-    getZeroTable(data: ZeroTableGetObject): Observable<any> {
-        return this.apiService.getZeroTable(data);
-    }
+    // getZeroTable(data: ZeroTableGetObject): Observable<any> {
+    //     return this.apiService.getZeroTable(data);
+    // }
 
-    getCaliberMapping(): Observable<any> {
-        return this.apiService.getCaliberMapping();
-    }
+    // getCaliberMapping(): Observable<any> {
+    //     return this.apiService.getCaliberMapping();
+    // }
 
-    getCalibersTable(): Observable<any> {
-        return this.apiService.getCalibersTable();
-    }
+    // getCalibersTable(): Observable<any> {
+    //     return this.apiService.getCalibersTable();
+    // }
 
-    getWepons(): Observable<any> {
-        return this.apiService.getWepons();
-    }
+    // getWepons(): Observable<any> {
+    //     return this.apiService.getWepons();
+    // }
 
-    getSightsZeroing(): Observable<any> {
-        return this.apiService.getSightsZeroing();
-    }
+    // getSightsZeroing(): Observable<any> {
+    //     return this.apiService.getSightsZeroing();
+    // }
 
-    getBullets(): Observable<any> {
-        return this.apiService.getBullets();
-    }
+    // getBullets(): Observable<any> {
+    //     return this.apiService.getBullets();
+    // }
 
 
-    getBallisticData(weaponName, sightName) {
-        return this.apiService.getBallisticData(weaponName, sightName);
-    }
+    // getBallisticData(weaponName, sightName) {
+    //     return this.apiService.getBallisticData(weaponName, sightName);
+    // }
 }
 
 class ZeroHitData {

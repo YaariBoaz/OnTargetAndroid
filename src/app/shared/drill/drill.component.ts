@@ -14,7 +14,7 @@ import {
 import * as Hammer from 'hammerjs';
 
 import {ShootingService} from '../services/shooting.service';
-import {DrillObject, DrillType} from '../../tab2/tab2.page';
+import {DrillObject, DrillType} from '../../custom-drill/custom-drill.page';
 import {StorageService} from '../services/storage.service';
 import {countUpTimerConfigModel, CountupTimerService, timerTexts} from 'ngx-timer';
 import {UserService} from '../services/user.service';

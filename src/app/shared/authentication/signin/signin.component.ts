@@ -55,7 +55,7 @@ export class SigninComponent implements OnInit {
         private nativePageTransitions: NativePageTransitions,
         private userService: UserService
     ) {
-        // this.router.navigateByUrl('/home/tabs/tab1');
+        // this.router.navigateByUrl('/home/tabs/dashboard');
         this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
         const content: any = document.querySelector('mat-tab-header');
         if (content) {
@@ -99,7 +99,7 @@ export class SigninComponent implements OnInit {
         //                     profileData.picture = 'https://graph.facebook.com/' + profileData.id + '/picture?width=1024&height=1024';
         //                     this.storageService.setItem('profileData', profileData);
         //                     this.storageService.setItem('isLogedIn', true);
-        //                     this.router.navigateByUrl('/home/tabs/tab1');
+        //                     this.router.navigateByUrl('/home/tabs/dashboard');
         //                 }, (err) => {
         //                     this.showAlert();
         //                 });
@@ -149,34 +149,9 @@ export class SigninComponent implements OnInit {
     }
 
 
-    async onLogin() {
-        this.submitted = true;
-        if (this.registerForm.invalid) {
-            return;
-        } else {
-            this.initService.isLoading.next(true);
-            this.apiService.login({
-                username: this.registerForm.value.email,
-                password: this.registerForm.value.password
-            }).subscribe((data: any) => {
-                localStorage.setItem('userId', data.id);
-                this.userService.setUser(data);
-                this.storageService.setItem('isLoggedIn', true);
-                this.storageService.setItem('profileData', data);
-                this.initService.isLoading.next(false);
-                this.wizardService.notifyUserWasRegisterd.next(true);
-            },
-                (error) => {
-                    this.initService.isLoading.next(false);
-                    const dialogRef = this.dialog.open(SigninModalComponent, {
-                        width: '344px',
-                        data: {
-                            modalType: 'general'
-                        }
-                    });
-                });
-        }
-
+    onLogin() {
+        this.showSignin = false;
+        this.wizardService.notifyUserWasRegisterd.next(true);
     }
 
     backToSignin() {

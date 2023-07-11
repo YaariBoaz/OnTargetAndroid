@@ -47,7 +47,9 @@
                 "inject": true
               }
             ],
-            "scripts": [],
+            "scripts": [
+
+            ],
             "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,

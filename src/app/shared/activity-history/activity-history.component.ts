@@ -7,7 +7,7 @@ import {Platform} from '@ionic/angular';
 import {HistoryModel, HistoryValueItemModel} from '../models/HistoryModel';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {TargetType} from '../drill/constants';
-import {DrillType} from '../../tab2/tab2.page';
+import {DrillType} from '../../custom-drill/custom-drill.page';
 import {InitService} from '../services/init.service';
 import {ShareDialogComponent} from '../share-dialog/share-dialog.component';
 

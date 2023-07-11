@@ -11,11 +11,11 @@ export class ChallengesService {
     constructor(private api: ApiService, private userService: UserService) {
     }
 
-    getChallenges(): Observable<any> {
-        return this.api.getChallenges();
-    }
+    // getChallenges(): Observable<any> {
+    //     return this.api.getChallenges();
+    // }
 
-    getMyChallenges(): Observable<any> {
-        return this.api.getMyChallenges(this.userService.getUserId());
-    }
+    // getMyChallenges(): Observable<any> {
+    //     return this.api.getMyChallenges(this.userService.getUserId());
+    // }
 }

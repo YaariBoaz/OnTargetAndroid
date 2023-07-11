@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ShootingService} from './shooting.service';
-import {DrillObject, DrillType} from '../../tab2/tab2.page';
+import {DrillObject, DrillType} from '../../custom-drill/custom-drill.page';
 import {StorageService} from './storage.service';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {CountupTimerService} from 'ngx-timer';
@@ -17,7 +17,7 @@ import {BalisticCalculatorService} from './balistic-calculator.service';
 export class GatewayService {
     drillFinishedBefore = false;
     drillFinished = false;
-    notifyTargetConnectedToGateway = new BehaviorSubject(null);
+    notifyTargetConnectedToGateway = new Subject();
 
     height: number;
     width: number;
@@ -148,6 +148,7 @@ export class GatewayService {
             targetId: this.storageService.getItem('slectedTarget').name,
             targetIP: '0',
             useMoq: false,
+            // tslint:disable-next-line:radix
             drillType: parseInt(this.drill.drillType.toString()),
             splitAvg: this.summaryObject.split,
             numericSplitAvg: this.timeStringToSeconds(this.summaryObject.split),
@@ -174,12 +175,12 @@ export class GatewayService {
             location: null
         };
 
-        this.apiService.syncDataGateway(drill).subscribe(() => {
-            this.apiService.getDashboardData(this.userService.getUserId()).subscribe((data1) => {
-                this.storageService.setItem('homeData', data1);
-                this.initService.newDashboardData.next(true);
-            });
-        });
+        // this.apiService.syncDataGateway(drill).subscribe(() => {
+        //     this.apiService.getDashboardData(this.userService.getUserId()).subscribe((data1) => {
+        //         this.storageService.setItem('homeData', data1);
+        //         this.initService.newDashboardData.next(true);
+        //     });
+        // });
 
     }
 
@@ -345,6 +346,9 @@ export class GatewayService {
                         break;
 
                     default:
+                        if(input.indexOf('e94a4cc64bd4') > -1) {
+                            this.notifyTargetConnectedToGateway.next({name:'D001'});
+                        };
                         break;
 
                 }
@@ -432,7 +436,7 @@ export class GatewayService {
     // Update battery percentage
     handleBatteryPrecentage_MSG(dataArray) {
         const targetName = dataArray[0];
-        if (this.targets.indexOf(targetName) === -1) {
+        if (this.targets.indexOf(targetName) === -1 && targetName.indexOf('eMarn') === -1) {
             this.notifyTargetConnectedToGateway.next(targetName);
             this.targets.push(targetName);
         }

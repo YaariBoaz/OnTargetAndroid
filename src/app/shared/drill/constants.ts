@@ -1,4 +1,4 @@
-import {DrillType} from '../../tab2/tab2.page';
+import {DrillType} from '../../custom-drill/custom-drill.page';
 
 export class ConstantData {
     static pageData = {

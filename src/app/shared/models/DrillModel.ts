@@ -1,5 +1,5 @@
 import {HistoryValueItemReccomendationModel, HistoryValueItemShotModel} from './HistoryModel';
-import {DrillType} from '../../tab2/tab2.page';
+import {DrillType} from '../../custom-drill/custom-drill.page';
 import {ShotItem} from '../drill/constants';
 
 export interface DrillModel {

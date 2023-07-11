@@ -54,29 +54,29 @@ export class InitService {
     }
 
     getWeapons() {
-        this.apiService.getWeapons().subscribe(weapons => {
-            this.storageService.setItem('gunList', weapons);
-            this.shootingService.weapons = weapons;
-        });
+        // this.apiService.getWeapons().subscribe(weapons => {
+        //     this.storageService.setItem('gunList', weapons);
+        //     this.shootingService.weapons = weapons;
+        // });
     }
 
     getSights() {
-        this.apiService.getSights().subscribe(sights => {
-            this.storageService.setItem('sightList', sights);
-        });
+        // this.apiService.getSights().subscribe(sights => {
+        //     this.storageService.setItem('sightList', sights);
+        // });
     }
 
     getSightsZeroing() {
-        this.apiService.getSightsZeroing().subscribe(sights => {
-            this.shootingService.sightsZeroing = sights;
-        });
+        // this.apiService.getSightsZeroing().subscribe(sights => {
+        //     this.shootingService.sightsZeroing = sights;
+        // });
     }
 
     getCalibers() {
-        this.apiService.getCalibers().subscribe(calibers => {
-            this.storageService.setItem('caliberList', calibers);
-            this.shootingService.calibers = calibers;
-        });
+        // this.apiService.getCalibers().subscribe(calibers => {
+        //     this.storageService.setItem('caliberList', calibers);
+        //     this.shootingService.calibers = calibers;
+        // });
     }
 
 

@@ -5,9 +5,6 @@ import {ApiService} from './services/api.service';
 import {UserService} from './services/user.service';
 import {MaterialModule} from './material/material.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {Tab3Page} from '../tab3/tab3.page';
-import {GunlistComponent} from '../tab3/gunlist/gunlist.component';
-import {SightlistComponent} from '../tab3/sightlist/sightlist.component';
 import {StorageService} from './services/storage.service';
 import {HitNohitService} from './drill/hit-nohit.service';
 import {TermsAndConditionComponent} from './components/terms-and-condition/terms-and-condition.component';
@@ -25,14 +22,13 @@ import {MakeItNormalTextPipe} from './pipes/make-it-normal-text.pipe';
 import {RouterModule} from '@angular/router';
 import {NewTargetDesignComponent} from './components/new-target-design/new-target-design.component';
 import {SelectTargetComponent} from './select-target-modal/select-target-component';
+import {ConnectBubbleComponent} from './connect-bubble/connect-bubble.component';
+import {BackButtonComponent} from './back-button/back-button.component';
 
 @NgModule({
     declarations: [
-        Tab3Page,
         NoConnetionErroComponent,
         AccessModalComponent,
-        GunlistComponent,
-        SightlistComponent,
         TermsAndConditionComponent,
         SelectTargetComponent,
         ErrorModalComponent,
@@ -41,7 +37,9 @@ import {SelectTargetComponent} from './select-target-modal/select-target-compone
         PaymentComponent,
         ReversePipe,
         MakeItNormalTextPipe,
-        NewTargetDesignComponent
+        NewTargetDesignComponent,
+        ConnectBubbleComponent,
+        BackButtonComponent
     ],
 
     imports: [
@@ -63,9 +61,9 @@ import {SelectTargetComponent} from './select-target-modal/select-target-compone
         FormsModule,
         MakeItNormalTextPipe,
         ReactiveFormsModule,
-        Tab3Page, GunlistComponent, SightlistComponent,
         ErrorModalComponent, AccessModalComponent, ReversePipe,
-        SelectTargetComponent, TermsAndConditionComponent, PaymentComponent, NewTargetDesignComponent
+        SelectTargetComponent, TermsAndConditionComponent, PaymentComponent,
+        NewTargetDesignComponent, ChallengeListComponent, ConnectBubbleComponent, BackButtonComponent
     ],
 
 

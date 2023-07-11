@@ -1,1 +1,0 @@
-(self.webpackChunkonTarget=self.webpackChunkonTarget||[]).push([[700],{20700:function(e,n,t){"use strict";t.r(n),t.d(n,{ScreenshotWeb:function(){return s}});var r=t(15310);class s extends r.Uw{async take(){throw new Error("Method not implemented.")}}}}]);

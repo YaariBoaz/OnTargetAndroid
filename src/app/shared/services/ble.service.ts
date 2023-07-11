@@ -20,6 +20,7 @@ export class BleService {
     dataFromDevice;
     notifyShotArrived = new BehaviorSubject(0);
     notifyDisconnect = new BehaviorSubject(null);
+    notifyConnectedToGateway = new BehaviorSubject(false);
     notifyTargetConnected = new BehaviorSubject(false);
     subscription: Subscription;
     scanFinished = new BehaviorSubject<any>(false);
@@ -52,7 +53,6 @@ export class BleService {
         this.ble.scan([], 5).subscribe(device => this.onDeviceDiscovered(device), error => this.scanError(error));
         setTimeout(() => {
             this.storage.setItem('ble', this.devices);
-            this.scanFinished.next(true);
         }, 6000);
     }
 
@@ -72,6 +72,7 @@ export class BleService {
                     device.name.toLowerCase().includes('nordic')) {
                     if (this.devices.length === 0) {
                         this.devices.push(device);
+                        this.notifyTargetConnected.next(device);
                         this.storage.setItem('ble', this.devices);
                     } else if (this.devices.find(o => o.id === device.id) === undefined) {
                         this.devices.push(device);
@@ -81,6 +82,7 @@ export class BleService {
                     this.gateways.push(device.id);
                     this.isGateway = true;
                     this.initService.isGateway = true;
+                    this.notifyConnectedToGateway.next(true)
                     this.connect(device.id);
                 }
             }
@@ -132,8 +134,6 @@ export class BleService {
             this.currentTargetId = deviceId;
             this.ble.connect(deviceId).subscribe(
                 (peripheral) => {
-                    this.isConnectedFlag = false;
-                    this.notifyTargetConnected.next(true);
                     this.onConnected(peripheral);
                 },
                 peripheral => {
@@ -218,11 +218,13 @@ export class BleService {
             this.gatewayService.processData(messageFromGatewaty);
         } else if (messageFromGatewaty.indexOf('Connecting') > -1) {
             this.gatewayTargets = {gateway: this.currentTargetId, target: messageFromGatewaty.split(' ')[3]};
-            this.notifyTargetConnected.next(true);
         } else if (messageFromGatewaty.indexOf('Disconnected') > -1) {
             this.activatRecconectProcess();
         }
         else if(messageFromGatewaty.indexOf(',SZ,') > -1){
+            this.gatewayService.processData(messageFromGatewaty);
+        }
+        else if(messageFromGatewaty.indexOf('e94a4cc64bd4') > -1){
             this.gatewayService.processData(messageFromGatewaty);
         }
     }
@@ -245,7 +247,6 @@ export class BleService {
                 this.subscription = this.ble.connect(this.currentTargetId).subscribe(
                     (peripheral) => {
                         this.isConnectedFlag = false;
-                        this.notifyTargetConnected.next(true);
                         this.onConnected(peripheral);
                     },
                     peripheral => {
