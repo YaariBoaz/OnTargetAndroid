@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {StorageService} from '../shared/services/storage.service';
+import {DashboardService} from '../dashboard/dashboard.service';
 
 @Component({
   selector: 'app-profile',
@@ -7,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor() { }
+  constructor(public storageService:StorageService,public dashboardService:DashboardService) { }
 
   ngOnInit() {}
 

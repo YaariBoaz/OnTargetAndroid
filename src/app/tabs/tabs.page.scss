@@ -9,3 +9,8 @@ ion-tab-bar{
 .tab-selected{
   color: #fce651 !important;
 }
+.hide-bottom{
+  ion-tab-bar{
+    display: none !important;
+  }
+}

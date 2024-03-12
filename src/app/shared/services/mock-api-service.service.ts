@@ -6,15 +6,19 @@ import {Observable, of} from 'rxjs';
   providedIn: 'root'
 })
 export class MockApiServiceService extends ApiService{
-
+  RANDOM_SHOTS = [0, 16, 32, 48];
   constructor() {
     super(null, null, null, null);
   }
 
-  getDashboardData(userId) :Observable<any>{
+  getDashboardData(userId:string) :Observable<any>{
     return of(null);
   }
-
+  fakeShot() {
+    const x = this.RANDOM_SHOTS[Math.floor(Math.random() * this.RANDOM_SHOTS.length)];
+    const y = this.RANDOM_SHOTS[Math.floor(Math.random() * this.RANDOM_SHOTS.length)];
+    return {xCoord: x, yCoord: y};
+  }
   // ping(): Observable<any> {
   //     return this.http.get(this.BASE_URL + 'ping');
   // }

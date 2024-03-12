@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {ShootingService} from '../shared/services/shooting/shooting.service';
 
 
 @Component({
@@ -8,5 +9,11 @@ import {Component} from '@angular/core';
 
 })
 export class TabsPage {
+    isInDrill = false;
+    constructor(private shootingService:ShootingService) {
+        this.shootingService.isInDrill.subscribe((flag:boolean) =>{
+            this.isInDrill = flag;
+        })
+    }
 
 }

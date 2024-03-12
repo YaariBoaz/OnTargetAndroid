@@ -9,8 +9,9 @@ import {CustomDrillPage} from './custom-drill/custom-drill.page';
 import {DrillComponent} from './shared/drill/drill.component';
 import {SelectTargetComponent} from './shared/select-target-modal/select-target-component';
 import {TabsPage} from './tabs/tabs.page';
-import {ProfileComponent} from "./profile/profile.component";
-import {FeedComponent} from "./feed/feed.component";
+import {ProfileComponent} from './profile/profile.component';
+import {ProgressComponent} from './progress/progress.component';
+import {FeedComponent} from './feed/feed.component';
 
 // const routes: Routes = [
 //   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -28,16 +29,37 @@ const routes: Routes = [
             },
             {
                 path:'activity',
-                component:SelectTargetComponent
+                children:[
+                    {
+                        component:SelectTargetComponent,
+                        path:''
+                    },
+                    {
+                        component:ChooseDrillComponent,
+                        path:'choose'
+                    },
+                    {
+                        component:DrillComponent,
+                        path:'drill'
+                    }
+                ]
             },
             {
                 path:'profile',
                 component:ProfileComponent
             },
             {
+                path:'progress',
+                component:ProgressComponent
+            },
+            {
                 path:'feed',
                 component:FeedComponent
-            }
+            },
+            {
+                path: '',
+                component:DashboardPage
+            },
 
         ]
 

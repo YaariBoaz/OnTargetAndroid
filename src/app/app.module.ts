@@ -10,7 +10,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
 import {StorageService} from './shared/services/storage.service';
 import {InitService} from './shared/services/init.service';
-import {Tab1Service} from './dashboard/dashboard.service';
+import {DashboardService} from './dashboard/dashboard.service';
 import {UserService} from './shared/services/user.service';
 import {BLE} from '@awesome-cordova-plugins/ble/ngx';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -40,12 +40,17 @@ import {AdvanceSettingsComponent} from './custom-drill/advance-settings/advance-
 import {TabsPage} from './tabs/tabs.page';
 import {TabsService} from './tabs/tabs.service';
 import {ProfileComponent} from './profile/profile.component';
+import {ProgressComponent} from './progress/progress.component';
+import {AndroidFullScreen} from '@awesome-cordova-plugins/android-full-screen/ngx';
 import {FeedComponent} from './feed/feed.component';
-
+import {SafePipe} from './shared/pipes/safe';
 
 // @ts-ignore
 @NgModule({
-    declarations: [AppComponent, ActivityLogComponent,AdvanceSettingsComponent,TabsPage,ProfileComponent,FeedComponent],
+    declarations: [AppComponent,
+        ActivityLogComponent,
+        AdvanceSettingsComponent,
+        TabsPage, ProfileComponent, ProgressComponent, FeedComponent, SafePipe],
     entryComponents: [ErrorModalComponent,AdvanceSettingsComponent],
     imports: [
         BrowserModule,
@@ -74,18 +79,20 @@ import {FeedComponent} from './feed/feed.component';
         ApiService,
         NativePageTransitions,
         StorageService,
-        Tab1Service,
+        DashboardService,
         SocialSharing,
         UserService,
         BLE,
         BluetoothSerial,
+        AndroidFullScreen,
         GatewayService,
         BleService,
         Crop,
         PurchaseService,
         InAppPurchase2,
         BulletBankService,
-        TabsService
+        TabsService,
+        SafePipe
     ],
     exports: [MaterialModule],
     bootstrap: [AppComponent]

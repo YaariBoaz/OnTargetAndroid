@@ -126,21 +126,24 @@ c39 -32 96 -76 125 -98 48 -36 52 -42 52 -81 0 -23 5 -44 10 -46 10 -3 13 -14
     </div>
     <div class="content">
         <ul class="options" *ngIf="activeTab === 'pistol'">
-            <li *ngFor="let item of optionsToRender['pistol']; let index = index"
-                [style.background-image]="getBackgroundImage(item)" (click)="onChallengeChosen(item)">
+            <li *ngFor="let item of challengesService.optionsToRender['pistol']; let index = index"
+                [style.background-image]="getBackgroundImage(item)" [class.selected-target]="selectedChallenge == item" (click)="onChallengeChosen(item)">
                 <p *ngIf="item.challengeRank && item.challengeRank.rank !==-1" class="index">{{item.challengeRank.rank}}
                     /{{item.challengeRank.challengers}}</p>
                 <p>{{ item.metadata.title}}</p>
+                <img *ngIf="selectedChallenge == item" src="assets/icons/Icon%20-%20Check%20Circle%20-%20Filled.svg">
             </li>
         </ul>
         <ul class="options" *ngIf="activeTab === 'rifle'">
-            <li *ngFor="let item of optionsToRender['rifle']; let index = index"
+            <li *ngFor="let item of challengesService.optionsToRender['rifle']; let index = index" [class.selected-target]="selectedChallenge == item"
                 [style.background-image]="getBackgroundImage(item)" (click)="onChallengeChosen(item)">
                 <p *ngIf="item.challengeRank && item.challengeRank.rank !==-1" class="index">{{item.challengeRank.rank}}
                     /{{item.challengeRank.challengers}}</p>
                 <p>{{ item.metadata.title}}</p>
+                <img *ngIf="selectedChallenge == item" src="assets/icons/Icon%20-%20Check%20Circle%20-%20Filled.svg">
             </li>
         </ul>
     </div>
 </section>
 
+<button (click)="startChallenge()" class="start-btn" *ngIf="selectedChallenge"> START </button>

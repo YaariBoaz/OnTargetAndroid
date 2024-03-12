@@ -1,20 +1,24 @@
-<ion-tabs>
+<ion-tabs [class.hide-bottom]="isInDrill">
     <ion-tab-bar slot="bottom">
         <ion-tab-button tab="dashboard">
             <ion-icon name="reader-outline"></ion-icon>
-            Dashboard
+            DASHBOARD
+        </ion-tab-button>
+        <ion-tab-button tab="feed">
+            <ion-icon name="reader-outline"></ion-icon>
+            FEED
         </ion-tab-button>
         <ion-tab-button tab="activity">
             <ion-icon name="locate-outline"></ion-icon>
-            Activity
+            ACTIVITY
         </ion-tab-button>
-        <ion-tab-button tab="feed">
+        <ion-tab-button tab="progress">
             <ion-icon name="stats-chart-outline"></ion-icon>
-            Progress
+            PROGRESS
         </ion-tab-button>
         <ion-tab-button tab="profile">
             <ion-icon name="skull-outline"></ion-icon>
-            Profile
+            PROFILE
         </ion-tab-button>
     </ion-tab-bar>
 </ion-tabs>

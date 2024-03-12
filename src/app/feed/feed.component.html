@@ -1,8 +1,65 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Header</ion-title>
-  </ion-toolbar>
-</ion-header>
-<ion-content class="ion-padding">
-  <h1>Content</h1>
-</ion-content>
+<h1>FEED</h1>
+<div class="feed-wrapper">
+    <div class="feed" *ngFor="let item of feedItems; let i= index">
+     <div *ngIf="item.type===0">
+         <h6> {{item.title}}</h6>
+         <p> {{item.description}}</p>
+         <iframe  width="560" height="315" [src]="_sanitizer.bypassSecurityTrustResourceUrl(item.url)"></iframe>
+         <div class="chat">
+             <div class="history">
+               <div class="comment">
+                    <div class="name-and-img">
+                         <img src="assets/avatar.jpg">
+                         <span> Nick Holds</span>
+                    </div>
+                    <div class="comment-text">
+                      <p> That was fucking insane!!</p>
+                    </div>
+               </div>
+               <div class="comment">
+                    <div class="name-and-img">
+                         <img src="assets/avatar.jpg">
+                         <span> Nick Holds</span>
+                    </div>
+                    <div class="comment-text">
+                      <p> That was fucking insane!!</p>
+                    </div>
+               </div>
+               <div class="comment">
+                    <div class="name-and-img">
+                         <img src="assets/avatar.jpg">
+                         <span> Nick Holds</span>
+                    </div>
+                    <div class="comment-text">
+                      <p> That was fucking insane!!</p>
+                    </div>
+               </div>
+               <div class="comment">
+                    <div class="name-and-img">
+                         <img src="assets/avatar.jpg">
+                         <span> Nick Holds</span>
+                    </div>
+                    <div class="comment-text">
+                      <p> That was fucking insane!!</p>
+                    </div>
+               </div>
+             </div>
+             <div class="my-comment">
+                 <input placeholder="write your comment">
+                 <div> SEND </div>
+             </div>
+         </div>
+     </div>
+     <div *ngIf="item.type===1">
+          <img  [src]=item.url>
+     </div>
+     <div class="advertisment" *ngIf="item.type===2" >
+        <header> {{item.title}}</header>
+        <img [src]=item.url>
+         <div class="buy">
+             <button> CLICK TO BUY </button>
+         </div>
+      </div>
+    </div>
+</div>
+

@@ -1,6 +1,6 @@
 import {Component, Inject, NgZone, OnInit, ViewChild} from '@angular/core';
 import {AlertController, ModalController, Platform} from '@ionic/angular';
-import {ShootingService} from '../shared/services/shooting.service';
+import {ShootingService} from '../shared/services/shooting/shooting.service';
 import {StorageService} from '../shared/services/storage.service';
 import {ScreenOrientation} from '@ionic-native/screen-orientation/ngx';
 import {Router} from '@angular/router';
@@ -174,7 +174,7 @@ export class CustomDrillPage implements OnInit {
             this.shootingService.drillStarteEvent.next(true);
             this.shootingService.selectedDrill = this.drill;
             this.shootingService.numberOfBullersPerDrill = this.drill.numOfBullets;
-            this.router.navigateByUrl('drill');
+            this.router.navigateByUrl('/activity/drill',{ replaceUrl: true });
     }
 
     async showLongRangeAlert() {
@@ -230,7 +230,7 @@ export class CustomDrillPage implements OnInit {
     onBackPressed() {
 
         this.zone.run(() => {
-            this.router.navigateByUrl('/home');
+            this.router.navigateByUrl('/home',{ replaceUrl: true });
         });
 
     }

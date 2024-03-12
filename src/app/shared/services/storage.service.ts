@@ -30,7 +30,48 @@ export class StorageService {
         'DP',
         'P40'
     ];
-
+    rankings = [
+        {
+            name: 'Josh Monty',
+            score:'69,343',
+            pic:'assets/ranking-profile-pic/1.jpeg',
+            flag:'assets/flags/usa.png',
+            hits:323,
+            misses:23,
+        },
+        {
+            name: 'Yair Cohen',
+            score:'64,122',
+            pic:'assets/ranking-profile-pic/2.jpg',
+            flag:'assets/flags/israel.png',
+            hits:289,
+            misses:45,
+        },
+        {
+            name: 'Pier Cordova',
+            score:'62,269',
+            pic:'assets/ranking-profile-pic/3.jpg',
+            flag:'assets/flags/france.png',
+            hits:275,
+            misses:44,
+        },
+        {
+            name: 'Rick Smith',
+            score:'60,429',
+            pic:'assets/ranking-profile-pic/4.jpg',
+            flag:'assets/flags/usa.png',
+            hits:263,
+            misses:47,
+        },
+        {
+            name: 'Avi Levi',
+            score:'59,389',
+            pic:'assets/ranking-profile-pic/5.jpg',
+            flag:'assets/flags/israel.png',
+            hits:244,
+            misses:39,
+        },
+    ]
     constructor(private apiService: ApiService) {
         this.initData();
         this.trySyncData();

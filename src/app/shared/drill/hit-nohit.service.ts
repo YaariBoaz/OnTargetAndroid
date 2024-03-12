@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {countUpTimerConfigModel, CountupTimerService, timerTexts} from 'ngx-timer';
-import {ShootingService} from '../services/shooting.service';
+import {ShootingService} from '../services/shooting/shooting.service';
 import {DashboardModel} from '../models/dashboard-model';
 import {DrillModel, DrillModelHitNoHit} from '../models/DrillModel';
 import {StorageService} from '../services/storage.service';

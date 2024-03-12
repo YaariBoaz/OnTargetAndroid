@@ -5,7 +5,7 @@ import {UserService} from './user.service';
 import { BLE } from '@awesome-cordova-plugins/ble/ngx';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {GatewayService} from './gateway.service';
-import {ShootingService} from './shooting.service';
+import {ShootingService} from './shooting/shooting.service';
 
 
 @Injectable({

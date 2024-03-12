@@ -1,15 +1,14 @@
 import {Injectable} from '@angular/core';
-import {ShootingService} from './shooting.service';
+import {ShootingService} from './shooting/shooting.service';
 import {DrillObject, DrillType} from '../../custom-drill/custom-drill.page';
 import {StorageService} from './storage.service';
 import {BehaviorSubject, Subject} from 'rxjs';
-import {CountupTimerService} from 'ngx-timer';
-import {ApiService} from './api.service';
 import {UserService} from './user.service';
 import * as moment from 'moment';
 import {DrillInfo, DrillStatus, ShotItem, TargetType} from '../drill/constants';
 import {InitService} from './init.service';
 import {BalisticCalculatorService} from './balistic-calculator.service';
+import {BLE} from '@awesome-cordova-plugins/ble/ngx';
 
 @Injectable({
     providedIn: 'root'
@@ -22,8 +21,7 @@ export class GatewayService {
     height: number;
     width: number;
     notifyHitNoHit = new Subject();
-
-    drill: DrillObject;
+    notifyResetGateway = new BehaviorSubject(false);
     shots = [];
     stats = [];
     pageData = {
@@ -68,8 +66,8 @@ export class GatewayService {
                 private storageService: StorageService,
                 private initService: InitService,
                 private ballisticCalculatorService: BalisticCalculatorService,
-                private counterUpTimerService: CountupTimerService,
-                private apiService: ApiService, private userService: UserService) {
+                public ble: BLE,
+                private userService: UserService) {
     }
 
     // Inits stats for drill when user starts a new drill
@@ -101,7 +99,7 @@ export class GatewayService {
 
     // When drill is finished and the user decides to save the drill
     updateHistory() {
-        this.drill = this.shootingService.selectedDrill;
+        const currentDrill = this.shootingService.selectedDrill;
         let updatedData = this.storageService.getItem('homeData');
         if (!updatedData) {
             updatedData = {};
@@ -136,10 +134,10 @@ export class GatewayService {
             pointsGained: this.summaryObject.points,
             timeLimit: 0,
             bulletsHit: this.hits.length,
-            numberOfBullets: this.drill.numOfBullets,
-            drillTitle: DrillType[this.drill.drillType],
+            numberOfBullets: currentDrill.numOfBullets,
+            drillTitle: DrillType[currentDrill.drillType],
             maxNumberOfPoints: 100000,
-            range: this.drill.range,
+            range: currentDrill.range,
             imageIdKey: '',
             imageIdFullKey: 0,
             hitsWithViewAdjustments: null,
@@ -149,14 +147,14 @@ export class GatewayService {
             targetIP: '0',
             useMoq: false,
             // tslint:disable-next-line:radix
-            drillType: parseInt(this.drill.drillType.toString()),
+            drillType: parseInt(currentDrill.drillType.toString()),
             splitAvg: this.summaryObject.split,
             numericSplitAvg: this.timeStringToSeconds(this.summaryObject.split),
             timeElapsed: this.summaryObject.totalTime,
             recomendation: '',
-            wepon: this.drill.weapon,
-            sight: this.drill.sight,
-            ammo: this.drill.ammo,
+            wepon: currentDrill.weapon,
+            sight:currentDrill.sight,
+            ammo: currentDrill.ammo,
             realibilty: '',
             b2Drop: 0,
             exposeTime: 0,
@@ -394,7 +392,7 @@ export class GatewayService {
         }
         let zeroData = {} as any;
         zeroData = this.ballisticCalculatorService.updateShot(saveX, saveY, this.hits);
-        if (this.shootingService.getisZero()) {
+        if (this.shootingService.getIsZero()) {
             if (zeroData.isBarhan) {
                 this.hits[this.hits.length - 1].isBarhan = true;
             } else {
@@ -437,7 +435,7 @@ export class GatewayService {
     handleBatteryPrecentage_MSG(dataArray) {
         const targetName = dataArray[0];
         if (this.targets.indexOf(targetName) === -1 && targetName.indexOf('eMarn') === -1) {
-            this.notifyTargetConnectedToGateway.next(targetName);
+            this.notifyTargetConnectedToGateway.next({name:targetName});
             this.targets.push(targetName);
         }
         const b = dataArray[2];
@@ -636,6 +634,7 @@ export class GatewayService {
         } else if (chosenTarget.indexOf('a') > -1) {
             return TargetType.Type_16;
         }
+        // tslint:disable-next-line:radix
         const num = parseInt(chosenTarget.split('e')[1].split('n')[0]);
         switch (num) {
             case 16:
@@ -647,5 +646,21 @@ export class GatewayService {
             default:
                 return TargetType.Type_64;
         }
+    }
+
+    resetGateway(currentTargetId,SERVICE_2,SERVICE_2_CHAR_WRITE) {
+        this.ble.write(currentTargetId, SERVICE_2, SERVICE_2_CHAR_WRITE, this.str2ab('R')).then((data) => {
+            this.notifyResetGateway.next(true);
+        });
+
+    }
+
+    str2ab(str) {
+        const buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
+        const bufView = new Uint16Array(buf);
+        for (let i = 0, strLen = str.length; i < strLen; i++) {
+            bufView[i] = str.charCodeAt(i);
+        }
+        return buf;
     }
 }

@@ -41,52 +41,57 @@ and (-webkit-device-pixel-ratio : 3) {
 }
 
 
+
+
+@font-face {
+  font-family: 'Merriweather', serif;;
+  font-style: normal;
+  font-weight: 700;
+  src: url("assets/fonts/Merriweather-Bold.ttf");
+}
+
+@font-face {
+  font-family: 'Merriweather', serif;;
+  font-style: normal;
+  font-weight: 400;
+  src: url("assets/fonts/Merriweather-Regular.ttf");
+}
+
+@font-face {
+  font-family: 'Merriweather', serif;;
+  font-style: normal;
+  font-weight: 300;
+  src: url("assets/fonts/Merriweather-Light.ttf");
+}
+
+:root {
+  --ion-font-family: Merriweather;
+}
+
 //@font-face {
-//  font-family: 'Roboto';
+//  font-family: 'Bruno Ace SC', cursive;
+//  font-style: normal;
+//  font-weight: 400;
+//  src: url("assets/fonts/BrunoAceSC-Regular.ttf");
+//}
+//@font-face {
+//  font-family: 'Bruno Ace SC', cursive;
 //  font-style: normal;
 //  font-weight: 700;
-//  src: url("assets/fonts/Roboto-Bold.ttf");
+//  src: url("assets/fonts/BrunoAceSC-Regular.ttf");
 //}
 //
 //@font-face {
-//  font-family: 'Roboto';
-//  font-style: normal;
-//  font-weight: 400;
-//  src: url("assets/fonts/Roboto-Regular.ttf");
-//}
-
-//@font-face {
-//  font-family: 'Roboto';
+//  font-family: 'Bruno Ace SC', cursive;
 //  font-style: normal;
 //  font-weight: 300;
-//  src: url("assets/fonts/Roboto-Thin.ttf");
+//  src: url("assets/fonts/BrunoAceSC-Regular.ttf");
 //}
-
-
-@font-face {
-  font-family: 'Bruno Ace SC', cursive;
-  font-style: normal;
-  font-weight: 400;
-  src: url("assets/fonts/BrunoAceSC-Regular.ttf");
-}
-@font-face {
-  font-family: 'Bruno Ace SC', cursive;
-  font-style: normal;
-  font-weight: 700;
-  src: url("assets/fonts/BrunoAceSC-Regular.ttf");
-}
-
-@font-face {
-  font-family: 'Bruno Ace SC', cursive;
-  font-style: normal;
-  font-weight: 300;
-  src: url("assets/fonts/BrunoAceSC-Regular.ttf");
-}
 
 body, html {
   margin: 0;
   height: 100%;
-  font-family: 'Bruno Ace SC', cursive;
+  font-family: 'Roboto', cursive;
   background-color: #2d3436;
   background-image: linear-gradient(315deg, #2d3436 0%, #000000 74%);
 }
@@ -122,11 +127,11 @@ body, html {
 }
 
 .mat-expansion-panel {
-  background-color: white !important;
+  background-color: transparent !important;
 }
 
 .mat-expansion-panel-header {
-  background-color: white !important;
+  background-color: transparent !important;
 }
 
 .mat-expansion-panel-header-title {
@@ -139,9 +144,9 @@ body, html {
 .mat-expansion-indicator::after {
   color: black !important;
 }
+::ng-deep .toolbar-background{
+  background-image: linear-gradient(315deg,#2d3436,#000 74%);
 
-.header-wrapper {
-  display: flex;
 }
 
 .mat-step-icon {
@@ -151,6 +156,11 @@ body, html {
 .mat-step-icon-selected {
   background-color: $deep_sea_blue !important;
   border-color: #ce564b !important;
+}
+
+
+::ng-deep .toolbar-container{
+  padding:  0px !important;
 }
 
 .mat-step-label {

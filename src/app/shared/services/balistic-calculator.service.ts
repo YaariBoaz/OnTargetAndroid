@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {ShootingService} from './shooting.service';
+import {ShootingService} from './shooting/shooting.service';
 import {Subject, Observable} from 'rxjs';
 import {ApiService, ZeroTableGetObject} from './api.service';
 import {InitService} from './init.service';

@@ -52,19 +52,11 @@ var autoconnected = {};
 
 module.exports = {
     scan: function (services, seconds, success, failure) {
-        var successWrapper = function (peripheral) {
-            convertToNativeJS(peripheral);
-            success(peripheral);
-        };
-        cordova.exec(successWrapper, failure, 'BLE', 'scan', [services, seconds]);
+        module.exports.startScanWithOptions(services, { duration: seconds }, success, failure);
     },
 
     startScan: function (services, success, failure) {
-        var successWrapper = function (peripheral) {
-            convertToNativeJS(peripheral);
-            success(peripheral);
-        };
-        cordova.exec(successWrapper, failure, 'BLE', 'startScan', [services]);
+        module.exports.startScanWithOptions(services, undefined, success, failure);
     },
 
     stopScan: function (success, failure) {
@@ -95,7 +87,6 @@ module.exports = {
         cordova.exec(success, failure, 'BLE', 'bondedDevices', []);
     },
 
-    // this will probably be removed
     list: function (success, failure) {
         cordova.exec(success, failure, 'BLE', 'list', []);
     },
@@ -214,8 +205,17 @@ module.exports = {
     },
 
     // success callback is called on notification
-    startNotification: function (device_id, service_uuid, characteristic_uuid, success, failure) {
-        cordova.exec(success, failure, 'BLE', 'startNotification', [device_id, service_uuid, characteristic_uuid]);
+    startNotification: function (device_id, service_uuid, characteristic_uuid, success, failure, options) {
+        const emitOnRegistered = options && options.emitOnRegistered == true;
+        function onEvent(data) {
+            if (data === 'registered') {
+                // For backwards compatibility, don't emit the registered event unless explicitly instructed
+                if (emitOnRegistered) success(data);
+            } else {
+                success(data);
+            }
+        }
+        cordova.exec(onEvent, failure, 'BLE', 'startNotification', [device_id, service_uuid, characteristic_uuid]);
     },
 
     // success callback is called when the descriptor 0x2902 is written
@@ -245,11 +245,11 @@ module.exports = {
     },
 
     startLocationStateNotifications: function (success, failure) {
-      cordova.exec(success, failure, "BLE", "startLocationStateNotifications", []);
+        cordova.exec(success, failure, 'BLE', 'startLocationStateNotifications', []);
     },
 
     stopLocationStateNotifications: function (success, failure) {
-      cordova.exec(success, failure, "BLE", "stopLocationStateNotifications", []);
+        cordova.exec(success, failure, 'BLE', 'stopLocationStateNotifications', []);
     },
 
     startStateNotifications: function (success, failure) {
@@ -263,6 +263,18 @@ module.exports = {
     restoredBluetoothState: function (success, failure) {
         cordova.exec(success, failure, 'BLE', 'restoredBluetoothState', []);
     },
+
+    bond: function (device_id, success, failure, options) {
+        cordova.exec(success, failure, 'BLE', 'bond', [device_id, options || {}]);
+    },
+
+    unbond: function (device_id, success, failure) {
+        cordova.exec(success, failure, 'BLE', 'unbond', [device_id]);
+    },
+
+    readBondState: function (device_id, success, failure) {
+        cordova.exec(success, failure, 'BLE', 'readBondState', [device_id]);
+    },
 };
 
 module.exports.withPromises = {
@@ -270,8 +282,6 @@ module.exports.withPromises = {
     startScan: module.exports.startScan,
     startScanWithOptions: module.exports.startScanWithOptions,
     connect: module.exports.connect,
-    startNotification: module.exports.startNotification,
-    startStateNotifications: module.exports.startStateNotifications,
 
     stopScan: function () {
         return new Promise(function (resolve, reject) {
@@ -282,6 +292,18 @@ module.exports.withPromises = {
     disconnect: function (device_id) {
         return new Promise(function (resolve, reject) {
             module.exports.disconnect(device_id, resolve, reject);
+        });
+    },
+
+    bondedDevices: function () {
+        return new Promise(function (resolve, reject) {
+            module.exports.bondedDevices(resolve, reject);
+        });
+    },
+
+    list: function () {
+        return new Promise(function (resolve, reject) {
+            module.exports.list(resolve, reject);
         });
     },
 
@@ -315,6 +337,26 @@ module.exports.withPromises = {
         });
     },
 
+    startNotification: function (device_id, service_uuid, characteristic_uuid, success, failure) {
+        return new Promise(function (resolve, reject) {
+            module.exports.startNotification(
+                device_id,
+                service_uuid,
+                characteristic_uuid,
+                (data) => {
+                    resolve();
+                    // Filter out registered callback
+                    if (data !== 'registered') success(data);
+                },
+                (err) => {
+                    reject(err);
+                    failure(err);
+                },
+                { emitOnRegistered: true }
+            );
+        });
+    },
+
     stopNotification: function (device_id, service_uuid, characteristic_uuid) {
         return new Promise(function (resolve, reject) {
             module.exports.stopNotification(device_id, service_uuid, characteristic_uuid, resolve, reject);
@@ -345,16 +387,46 @@ module.exports.withPromises = {
         });
     },
 
+    startStateNotifications: function (success, failure) {
+        return new Promise(function (resolve, reject) {
+            module.exports.startStateNotifications(
+                function (state) {
+                    resolve();
+                    success(state);
+                },
+                function (err) {
+                    reject(err);
+                    failure(err);
+                }
+            );
+        });
+    },
+
     stopStateNotifications: function () {
         return new Promise(function (resolve, reject) {
             module.exports.stopStateNotifications(resolve, reject);
         });
     },
 
+    startLocationStateNotifications: function (change, failure) {
+        return new Promise(function (resolve, reject) {
+            module.exports.startLocationStateNotifications(
+                function (state) {
+                    resolve();
+                    change(state);
+                },
+                function (err) {
+                    reject(err);
+                    failure(err);
+                }
+            );
+        });
+    },
+
     stopLocationStateNotifications: function () {
-      return new Promise(function(resolve, reject) {
-          module.exports.stopLocationStateNotifications(resolve, reject);
-      });
+        return new Promise(function (resolve, reject) {
+            module.exports.stopLocationStateNotifications(resolve, reject);
+        });
     },
 
     readRSSI: function (device_id) {
@@ -363,9 +435,80 @@ module.exports.withPromises = {
         });
     },
 
+    requestConnectionPriority: function (device_id, priority) {
+        return new Promise(function (resolve, reject) {
+            module.exports.requestConnectionPriority(device_id, priority, resolve, reject);
+        });
+    },
+
     restoredBluetoothState: function () {
         return new Promise(function (resolve, reject) {
             module.exports.restoredBluetoothState(resolve, reject);
+        });
+    },
+
+    bond: function (device_id, options) {
+        return new Promise(function (resolve, reject) {
+            module.exports.bond(device_id, resolve, reject, options);
+        });
+    },
+
+    unbond: function (device_id) {
+        return new Promise(function (resolve, reject) {
+            module.exports.unbond(device_id, resolve, reject);
+        });
+    },
+
+    readBondState: function (device_id) {
+        return new Promise(function (resolve, reject) {
+            module.exports.readBondState(device_id, resolve, reject);
+        });
+    },
+};
+
+module.exports.l2cap = {
+    close(device_id, psm, success, failure) {
+        cordova.exec(success, failure, 'BLE', 'closeL2Cap', [device_id, psm]);
+    },
+
+    open(device_id, psmOrOptions, connectCallback, disconnectCallback) {
+        var psm = psmOrOptions;
+        var settings = {};
+        if (psmOrOptions != undefined && 'psm' in psmOrOptions) {
+            psm = psmOrOptions.psm;
+            settings = psmOrOptions;
+        }
+        cordova.exec(connectCallback, disconnectCallback, 'BLE', 'openL2Cap', [device_id, psm, settings]);
+    },
+
+    receiveData(device_id, psm, receive) {
+        cordova.exec(receive, function () {}, 'BLE', 'receiveDataL2Cap', [device_id, psm]);
+    },
+
+    write(device_id, psm, data, success, failure) {
+        cordova.exec(success, failure, 'BLE', 'writeL2Cap', [device_id, psm, data]);
+    },
+};
+
+module.exports.withPromises.l2cap = {
+    close(device_id, psm) {
+        return new Promise(function (resolve, reject) {
+            module.exports.l2cap.close(device_id, psm, resolve, reject);
+        });
+    },
+
+    open(device_id, psmOrOptions, disconnectCallback) {
+        return new Promise(function (resolve, reject) {
+            module.exports.l2cap.open(device_id, psmOrOptions, resolve, function (e) {
+                disconnectCallback(e);
+                reject(e);
+            });
+        });
+    },
+
+    write(device_id, psm, data) {
+        return new Promise(function (resolve, reject) {
+            module.exports.l2cap.write(device_id, psm, data, resolve, reject);
         });
     },
 };

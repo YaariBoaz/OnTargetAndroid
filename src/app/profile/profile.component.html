@@ -1,8 +1,26 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Header</ion-title>
-  </ion-toolbar>
-</ion-header>
-<ion-content class="ion-padding">
-  <h1>Content</h1>
-</ion-content>
+<section>
+  <div class="rank-and-suggestion">
+    <img src="assets/profile-bg3.jpeg"/>
+  </div>
+  <div class="personal-info">
+    <img class="profile-pic" src="assets/ranking-profile-pic/1.jpeg"/>
+    <img class="flag" src="assets/flags/usa.png">
+    <div class="name-and-address">
+      <p>{{storageService.rankings[0].name}}</p>
+    </div>
+    <div class="stats">
+      <div class="ranking">
+      <span class="value">#1</span>
+      <span class="title">RANK</span>
+      </div>
+      <div class="games-played">
+        <span class="value">{{dashboardService.getTrains().length}}</span>
+        <span class="title">GAMES PLAYED</span>
+      </div>
+      <div class="points">
+        <span  class="value points">{{dashboardService.getTotalPoints()}}</span>
+        <span class="title">POINTS</span>
+      </div>
+    </div>
+  </div>
+</section>

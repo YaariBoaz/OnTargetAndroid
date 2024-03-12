@@ -125,7 +125,6 @@ section.drill-results {
       .counter-shot {
         position: absolute;
         font-family: Roboto, serif;
-        font-size: 22px;
         font-stretch: normal;
         font-style: normal;
         line-height: 1.14;
@@ -137,6 +136,7 @@ section.drill-results {
         font-weight: 900;
         justify-content: center;
         display: flex;
+        font-size: calc(15px + 0.390625vw) !important;
         align-items: center;
       }
     }
@@ -372,11 +372,6 @@ section.drill-results {
       height: 183.7px;
     }
   }
-}
-
-
-::ng-deep ion-tab-bar {
-  display: none;
 }
 
 td {

@@ -1,8 +1,7 @@
-import {Component, ElementRef, HostListener, Inject, OnDestroy, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
+import {Component, ElementRef, HostListener, OnInit} from '@angular/core';
 import {ChallengesService} from '../challenges.service';
 import {Router} from '@angular/router';
-import {ShootingService} from '../../services/shooting.service';
+import {ShootingService} from '../../services/shooting/shooting.service';
 import {DrillType} from '../../../custom-drill/custom-drill.page';
 import {TargetType} from '../../drill/constants';
 
@@ -15,113 +14,19 @@ export class ChallengeListComponent implements OnInit {
     bestResultSentence = 'Best Result Is: \n';
     activeTab = 'rifle';
     @HostListener('window:beforeunload')
-    optionsToRender = {
-        rifle: [
-            {
-            range: 10,
-            challengeRank:{
-                rank:3,
-                challengers:12
-            },
-            metadata:{
-                title:'Shoot As Fast As You Can',
-                numberOfBullets: 10,
-                FastTrigger: 'string',
-                useSplitTime: false,
-                useTotalTime: true,
-                useHighestScore: false,
-                dateCreated: '2022-01-12T10:44:55.431Z',
-                isActive: true,
-                bgId:1
-            },
-        },
-            {
-                range: 10,
-                challengeRank:{
-                    rank:3,
-                    challengers:12
-                },
-                metadata:{
-                    title:'Shoot As Fast As You Can',
-                    numberOfBullets: 10,
-                    FastTrigger: 'string',
-                    useSplitTime: false,
-                    useTotalTime: true,
-                    useHighestScore: false,
-                    dateCreated: '2022-01-12T10:44:55.431Z',
-                    isActive: true,
-                    bgId:2
-                },
-            },
-            {
-                range: 10,
-                challengeRank:{
-                    rank:3,
-                    challengers:12
-                },
-                metadata:{
-                    title:'Shoot As Fast As You Can',
-                    numberOfBullets: 10,
-                    FastTrigger: 'string',
-                    useSplitTime: false,
-                    useTotalTime: true,
-                    useHighestScore: false,
-                    dateCreated: '2022-01-12T10:44:55.431Z',
-                    isActive: true,
-                    bgId:3
-                },
-            },
-            {
-                range: 10,
-                challengeRank:{
-                    rank:3,
-                    challengers:12
-                },
-                metadata:{
-                    title:'Shoot As Fast As You Can',
-                    numberOfBullets: 10,
-                    FastTrigger: 'string',
-                    useSplitTime: false,
-                    useTotalTime: true,
-                    useHighestScore: false,
-                    dateCreated: '2022-01-12T10:44:55.431Z',
-                    isActive: true,
-                    bgId:4
-                },
-            },
-            {
-                range: 10,
-                challengeRank:{
-                    rank:3,
-                    challengers:12
-                },
-                metadata:{
-                    title:'Shoot As Fast As You Can',
-                    numberOfBullets: 10,
-                    FastTrigger: 'string',
-                    useSplitTime: false,
-                    useTotalTime: true,
-                    useHighestScore: false,
-                    dateCreated: '2022-01-12T10:44:55.431Z',
-                    isActive: true,
-                    bgId:5
-                },
-            }
-        ],
-        pistol: [],
-    };
     challenges  = [];
+    selectedChallenge = null;
 
 
 
 constructor(private elementRef: ElementRef,
-                private router: Router, private shootingService: ShootingService, private challengesService: ChallengesService) {
+                private router: Router, private shootingService: ShootingService, public challengesService: ChallengesService) {
 
     }
 
     ionViewWillEnter() {
-         this.optionsToRender.pistol = [];
-        this.optionsToRender.rifle = [];
+         this.challengesService.optionsToRender.pistol = [];
+        this.challengesService.optionsToRender.rifle = [];
         // this.challengesService.getMyChallenges().subscribe(data => {
         //     this.challenges = data;
         //     this.challenges.forEach(item => {
@@ -147,14 +52,7 @@ constructor(private elementRef: ElementRef,
     }
 
     onChallengeChosen(challenge: any) {
-        if (challenge.metadata.drillType === 'HitNoHit') {
-            challenge.metadata.drill = DrillType.HitNoHit;
-            challenge.metadata.drillType = DrillType.HitNoHit;
-        } else {
-            challenge.metadata.drill = DrillType.Regular;
-            challenge.metadata.drillType = DrillType.Regular;
-        }
-        this.setTargetType(challenge.metadata);
+        this.selectedChallenge = challenge;
         challenge.metadata.numOfBullets = challenge.metadata.numberOfBullets;
         this.shootingService.drillStarteEvent.next(true);
         this.shootingService.isChallenge = true;
@@ -163,22 +61,9 @@ constructor(private elementRef: ElementRef,
         this.shootingService.selectedDrill = challenge.metadata;
         this.shootingService.selectedDrill.bg = this.shootingService.selectedDrill.bgId
         this.shootingService.challenge = challenge;
-        this.router.navigateByUrl('drill');
     }
 
-    setTargetType(challenge) {
-        if (challenge.targetType === '003' || challenge.targetType.indexOf('64') > -1) {
-            challenge.targetType = TargetType.Type_64;
-        } else if (challenge.targetType.indexOf('128') > -1) {
-            challenge.targetType = TargetType.Type_128;
 
-        } else if (challenge.targetType.indexOf('16') > -1) {
-            challenge.targetType = TargetType.Type_16;
-
-        } else {
-            challenge.targetType = TargetType.HitNoHit;
-        }
-    }
 
     setTargetTypeForFilter(name) {
         if (name === '003' || name.indexOf('64') > -1) {
@@ -218,7 +103,11 @@ constructor(private elementRef: ElementRef,
     }
 
     onBackPressed() {
-        this.router.navigateByUrl('select-target');
+        this.router.navigateByUrl('select-target',{ replaceUrl: true });
+    }
+
+    startChallenge() {
+        this.router.navigateByUrl('/activity/drill',{ replaceUrl: true });
     }
 }
 

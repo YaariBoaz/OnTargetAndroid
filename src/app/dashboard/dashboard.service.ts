@@ -1,64 +1,112 @@
 import {Injectable} from '@angular/core';
-import {HitRatioChart} from '../shared/models/dashboard-model';
+import {ChallengesService} from '../shared/ChooseDrill/challenges.service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class Tab1Service {
+export class DashboardService {
 
     constructor() {
     }
-
-    setupDataForHitration(hitRatioRawData: HitRatioChart): HitrationDataModel {
-        if (hitRatioRawData.totalShots === 0 && hitRatioRawData.totalHits === 0) {
-            return new HitrationDataModel();
+    getHitRatio(){
+        const arr  = this.getTrains();
+        if(arr){
+         const hits = this.getTotalHits(arr);
+         const shots = this.getTotalBullets(arr);
+            return {
+                // tslint:disable-next-line:radix
+                percent :Math.round((100 * hits) / shots),
+                text: Math.round((100 * hits) / shots)+'%'
+            }
         }
-        const hitPrecentage: number = (hitRatioRawData.totalHits / hitRatioRawData.totalShots) * 100;
-        const hitRatio = new HitrationDataModel();
-        hitRatio.data = [hitPrecentage, 100 - hitPrecentage];
-        return hitRatio;
+        else{
+            return {
+                // tslint:disable-next-line:radix
+                percent : 0,
+                text: 0
+            }
+        }
+
+    }
+    getFastestTime(){
+        return localStorage.getItem('fastestSession');
+    }
+    getFastestSplitTime(){
+        return localStorage.getItem('fastestSplitTime');
+    }
+    getTotalSecondsPerSession(totalTime) {
+        let  totalSeconds = 0;
+        const arrayMinutesAndSeconds = totalTime.split(':');
+        if(arrayMinutesAndSeconds[0] !== '00'){
+            // tslint:disable-next-line:radix
+            totalSeconds+= parseInt(arrayMinutesAndSeconds) * 60;
+        }
+        const secondsAndMilli = arrayMinutesAndSeconds[1].split('.');
+        // tslint:disable-next-line:radix
+        totalSeconds+=parseInt(secondsAndMilli[0])
+        return totalSeconds;
+    }
+    getTotalHitsPerSession(points) {
+        return points / 2;
+    }
+    getTotalMissPerSession(numOfBullets, points) {
+        return numOfBullets - (points / 2);
+    }
+    getTotalHits(trains: any[]):number {
+        if(!trains){
+            return 0;
+        }
+        let sum = 0;
+        trains.forEach(train =>{
+            sum+= train.summaryObject.points / 2;
+        })
+        return sum;
+    }
+    getTotalScore(trains: any[]):number {
+        if(!trains){
+            return 0;
+        }
+        let sum = 0;
+        trains.forEach(train =>{
+            sum+= train.summaryObject.points;
+        })
+        return sum;
+    }
+    getTotalBullets(trains: any[]):number {
+        if(!trains){
+            return 0;
+        }
+        let sum = 0;
+        trains.forEach(train =>{
+            sum+= train.drill.numOfBullets;
+        })
+        return sum;
+    }
+
+    getTrains() {
+        const arr  = JSON.parse(localStorage.getItem('activityHistory'))
+        const trains  = []
+        if(arr){
+            Object.keys(arr).forEach(key =>{
+                trains.push({date:new Date(parseInt(key)),...arr[key]})
+            });
+            trains.reverse()
+            return trains;
+        }
+        return [];
     }
 
 
-
-    setTextInCenterForHitRatio(chart) {
-        const ctx = chart.ctx;
-        const txt = 'Center Text';
-
-        const sidePadding = 60;
-        const sidePaddingCalculated = (sidePadding / 100) * (chart.innerRadius * 2);
-
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        const centerX = ((chart.chartArea.left + chart.chartArea.right) / 2);
-        const centerY = ((chart.chartArea.top + chart.chartArea.bottom) / 2);
-
-        const stringWidth = ctx.measureText(txt).width;
-        const elementWidth = (chart.innerRadius * 2) - sidePaddingCalculated;
-
-        // Find out how much the font can grow in width.
-        const widthRatio = elementWidth / stringWidth;
-        const newFontSize = 25;
-        const elementHeight = (chart.innerRadius * 2);
-
-        // Pick a new font size so it will not be larger than the height of label.
-        const fontSizeToUse = Math.min(newFontSize, elementHeight);
-
-        ctx.font = fontSizeToUse + 'px Open Sans';
-        ctx.fillStyle = '#c39352';
-
-        // Draw text in center
-        ctx.fillText('67%', centerX, centerY);
+    getTotalPoints() {
+        const arr = this.getTrains();
+        let points = 0;
+        if(!arr){
+            return 0;
+        }else{
+            arr.forEach(item =>{
+                points+=item.summaryObject.points;
+            })
+        }
+        return points;
     }
-
-}
-
-
-export class HitrationDataModel {
-    data: [number, number] = [0, 0];
-
-    constructor() {
-    }
-
-
 }

@@ -2,13 +2,16 @@
 ion-header {
   border-bottom: 1px solid white;
   .header-wrapper{
+    height: 56px;
+    width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    border-bottom: 1px solid #ffffff36;
     .target-and-gateway-status{
       display: flex;
       width: 100%;
-      justify-content: center;
+      padding-right: 15px;
+      justify-content: flex-end;
       .gateway-icon{
         margin-right: 10px;
       }
@@ -26,13 +29,13 @@ ion-header {
       width: 30px;
     }
     .connected{
-      color: green;
+      fill: #00ff00;
       height: 30px;
       width: 30px;
     }
     svg{
       fill: #fff;
-      height: 40px;
+      height: 30px;
        right: 15px;
     }
   }
@@ -46,47 +49,7 @@ section.target-selection {
   overflow-y: auto;
    align-items: center;
 
-
-
-  header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    border-bottom: 1px solid #ffffff63;
-    height: 50px;
-    p.title {
-      display: flex;
-      align-items: center;
-      font-size: 27px;
-      color: white;
-      margin: 0;
-      padding-top: 7.5px;
-      padding-bottom: 7.5px;
-      span {
-        color: #FCE651;
-        padding-left: 0.3em;
-      }
-    }
-
-    button.connect {
-      border: 1px solid #FCE651;
-      box-sizing: border-box;
-      border-radius: 3px;
-      background-color: transparent;
-      color: #FCE651;
-      height: 50px;
-      width: 100%;
-
-      font-size: 16px;
-      line-height: 19px;
-      text-align: center;
-      text-transform: uppercase
-    }
-
-
-  }
-.ble-img{
+  .ble-img{
   position: absolute;
   top: 25%;
   display: flex;
@@ -106,7 +69,6 @@ section.target-selection {
       width: 100px !important;
     }
   }
-
   .scan-button-wrapper{
     display: flex;
     justify-content: center;
@@ -171,9 +133,7 @@ section.target-selection {
       width: 25vh;
     }
   }
-
-
-  button.continue {
+   button.continue {
     box-sizing: border-box;
     border-radius: 3px;
     background-color: #FCE651;
@@ -188,55 +148,9 @@ section.target-selection {
     bottom: 10px;
     right: 10px;
   }
-
-
   .scanAnimation {
     animation: pulse-red 2s infinite;
   }
-
-
-  @keyframes pulse-blue {
-    0% {
-      transform: scale(0.95);
-      box-shadow:transparent;
-      border-radius: 100%;
-    }
-
-    70% {
-      transform: scale(1.5);
-      box-shadow: 0 0 0 10px transparent;
-      border-radius: 100%;
-    }
-
-    100% {
-      transform: scale(1);
-      box-shadow: 0 0 0 0 transparent;
-      border-radius: 100%;
-    }
-  }
-
-
-
-  @keyframes pulse-red {
-    0% {
-      transform: scale(0.95);
-      box-shadow: 0 0 0 0 rgba(84, 184, 222, 0.7);
-      border-radius: 100%;
-    }
-
-    70% {
-      transform: scale(1.5);
-      box-shadow: 0 0 0 10px rgba(84, 184, 222, 0);
-      border-radius: 100%;
-    }
-
-    100% {
-      transform: scale(1);
-      box-shadow: 0 0 0 0 rgba(84, 184, 222, 0);
-      border-radius: 100%;
-    }
-  }
-
   div.back-container {
     position: absolute;
     top: 16px;
@@ -259,4 +173,58 @@ section.target-selection {
     }
   }
 
+}
+::ng-deep ion-header{
+  background-image: linear-gradient(315deg,#2d3436,#000 74%);
+}
+@keyframes pulse-blue {
+  0% {
+    transform: scale(0.95);
+    box-shadow:transparent;
+    border-radius: 100%;
+  }
+
+  70% {
+    transform: scale(1.5);
+    box-shadow: 0 0 0 10px transparent;
+    border-radius: 100%;
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 transparent;
+    border-radius: 100%;
+  }
+}
+@keyframes pulse-red {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(84, 184, 222, 0.7);
+    border-radius: 100%;
+  }
+
+  70% {
+    transform: scale(1.5);
+    box-shadow: 0 0 0 10px rgba(84, 184, 222, 0);
+    border-radius: 100%;
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(84, 184, 222, 0);
+    border-radius: 100%;
+  }
+}
+.gateway-connected-no-targets{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  h1{
+    text-align: center;
+    color: white;
+  }
+}
+.disabled{
+  background-color: lightgrey !important;
 }

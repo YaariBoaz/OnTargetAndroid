@@ -2,13 +2,13 @@ import {Component, OnInit} from '@angular/core';
 import {ChallengesService} from './challenges.service';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {ChallengeListComponent} from './List/challenge-list.component';
-import {ShootingService} from '../services/shooting.service';
+import {ShootingService} from '../services/shooting/shooting.service';
 import {Router} from '@angular/router';
 import {ScreenOrientation} from '@ionic-native/screen-orientation/ngx';
 import {BleService} from '../services/ble.service';
 
 @Component({
-    selector: 'app-activity-log',
+    selector: 'choose-drill',
     templateUrl: './choose-drill.component.html',
     styleUrls: ['./choose-drill.component.scss'],
 })
@@ -53,11 +53,11 @@ export class ChooseDrillComponent implements OnInit {
 
 
     onBuildDrillClicked() {
-        this.router.navigateByUrl('/custom-drill/select');
+        this.router.navigateByUrl('/custom-drill/select',{ replaceUrl: true });
     }
 
     onBackPressed() {
-        this.router.navigateByUrl('/home');
+        this.router.navigateByUrl('/home',{ replaceUrl: true });
     }
 
     onTabSelected(selectedTab){

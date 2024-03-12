@@ -4,7 +4,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Chart} from 'chart.js';
 import {DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {ShootingService} from '../../shared/services/shooting.service';
+import {ShootingService} from '../../shared/services/shooting/shooting.service';
 import {BalisticCalculatorService} from '../../shared/services/balistic-calculator.service';
 import {ZeroTableGetObject} from '../../shared/services/api.service';
 

@@ -4,7 +4,9 @@ import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {StorageService} from './storage.service';
 import {GatewayService} from './gateway.service';
 import {InitService} from './init.service';
-import {ShootingService} from './shooting.service';
+import {ShootingService} from './shooting/shooting.service';
+import { Dialog } from '@capacitor/dialog';
+import {catchError, map} from "rxjs/operators";
 
 const SERVICE_2 = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
 const SERVICE_2_CHAR = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
@@ -29,9 +31,9 @@ export class BleService {
 
     isGateway: boolean;
     gatewayTargets: { gateway: any; target: any };
-    notifyResetGateway = new BehaviorSubject(false);
     gateways = [];
     activateReconnectProcessCount = 0;
+    isGatewayConnected = false;
 
     constructor(
         private storage: StorageService,
@@ -50,10 +52,10 @@ export class BleService {
     scan() {
         this.devices = [];  // clear list
         this.storage.setItem('ble', this.devices);
-        this.ble.scan([], 5).subscribe(device => this.onDeviceDiscovered(device), error => this.scanError(error));
-        setTimeout(() => {
-            this.storage.setItem('ble', this.devices);
-        }, 6000);
+        return this.ble.startScan([]).pipe(
+            map((device) => this.onDeviceDiscovered(device)),
+            catchError(this.scanError)
+        )
     }
 
     // When a BLE device is discovered we filter only the known devices.
@@ -61,15 +63,7 @@ export class BleService {
         this.ngZone.run(() => {
             if (device.name) {
                 console.log('FOUND DEVICE: ' + device.name);
-                if (device.name.toLowerCase().includes('adl') ||
-                    device.name.toLowerCase().includes('e64') ||
-                    device.name.toLowerCase().includes('e64n015') ||
-                    device.name.toLowerCase().includes('e1n') ||
-                    device.name.toLowerCase().includes('e1n') ||
-                    device.name.toLowerCase().includes('eMarn') ||
-                    device.name.toLowerCase().includes('003') ||
-                    device.name.toLowerCase().includes('e16') ||
-                    device.name.toLowerCase().includes('nordic')) {
+                if (this.isAdlTarget(device)) {
                     if (this.devices.length === 0) {
                         this.devices.push(device);
                         this.notifyTargetConnected.next(device);
@@ -78,9 +72,10 @@ export class BleService {
                         this.devices.push(device);
                         this.storage.setItem('ble', this.devices);
                     }
-                } else if (device.name.toLowerCase().includes('egateway')) {
+                } else if (this.isAdlGateway(device)) {
                     this.gateways.push(device.id);
                     this.isGateway = true;
+                    this.isGatewayConnected = true;
                     this.initService.isGateway = true;
                     this.notifyConnectedToGateway.next(true)
                     this.connect(device.id);
@@ -112,13 +107,13 @@ export class BleService {
         }
     }
 
-    // If location permission is denied, you'll end up here
-    scanError(error) {
-        console.log('Error: ' + error);
-    }
-
-    getDevices() {
-        return this.devices;
+    // If location permission is denied, Or Bluetooth is not active you'll end up here
+    async scanError(error) {
+        await Dialog.alert({
+            title: 'Bluetooth Error',
+            message: error,
+        });
+      return error;
     }
 
     // Sets the target to listen for message from.
@@ -138,7 +133,7 @@ export class BleService {
                 },
                 peripheral => {
                     console.log('DEVICE DISCONNECT IT SELF', peripheral);
-                    this.activatRecconectProcess();
+                    this.activateReconnectProcess();
                 }, () => {
                 }
             );
@@ -163,19 +158,7 @@ export class BleService {
     onDeviceDisconnected(peripheral) {
     }
 
-    ionViewDidLoad() {
-        console.log('ionViewDidLoad DetailPage');
-    }
-
-    ionViewWillLeave() {
-        console.log('ionViewWillLeave disconnecting Bluetooth');
-        this.ble.disconnect(this.peripheral.id).then(
-            () => console.log('Disconnected ' + JSON.stringify(this.peripheral)),
-            () => console.log('ERROR disconnecting ' + JSON.stringify(this.peripheral))
-        );
-    }
-
-
+    // Register to notifications from the gateway
     handleRead(name, id, service, characteristic) {
         console.log('SUBSCRIBED TO START NOTIFICATION');
         this.subscription = this.ble.startNotification(id, service, characteristic).subscribe((data) => {
@@ -207,38 +190,35 @@ export class BleService {
         });
     }
 
+    // Parse the messages from the gateway
     parseGatewayMessage(buffer: Uint8Array) {
         const selectedTarget = this.shootingService.chosenTarget;
-        const target = this.storage.getItem('slectedTarget');
-        const messageFromGatewaty = String.fromCharCode.apply(null, buffer);
-        console.log('MESSAGE ARRIVED: ' + messageFromGatewaty);
-        if (messageFromGatewaty.indexOf(',B,') > -1) {
-            this.gatewayService.processData(messageFromGatewaty);
-        } else if (selectedTarget && messageFromGatewaty.indexOf(',S,') > -1 && messageFromGatewaty.indexOf(selectedTarget.name) > -1) {
-            this.gatewayService.processData(messageFromGatewaty);
-        } else if (messageFromGatewaty.indexOf('Connecting') > -1) {
-            this.gatewayTargets = {gateway: this.currentTargetId, target: messageFromGatewaty.split(' ')[3]};
-        } else if (messageFromGatewaty.indexOf('Disconnected') > -1) {
-            this.activatRecconectProcess();
+        const messageFromGateway = String.fromCharCode.apply(null, buffer);
+        console.log('MESSAGE ARRIVED: ' + messageFromGateway);
+
+        // Events after target is already connected
+        if(selectedTarget){
+            console.log('CONNECTED TARGET IS ' + selectedTarget.name);
+            this.handleTargetMessages(messageFromGateway,selectedTarget);
         }
-        else if(messageFromGatewaty.indexOf(',SZ,') > -1){
-            this.gatewayService.processData(messageFromGatewaty);
-        }
-        else if(messageFromGatewaty.indexOf('e94a4cc64bd4') > -1){
-            this.gatewayService.processData(messageFromGatewaty);
+        // Events before or after target is connected.
+        else{
+            console.log('NO SELECTED TARGET IS CHOSEN!!!!!!!!');
+            this.handleGatewayMessages(messageFromGateway);
         }
     }
 
-
+    // Checks if a ble device Is connected.
     isConnected(): Promise<any> {
         return this.ble.isConnected(this.peripheral.id);
     }
 
-    dissconect() {
+    disconnect() {
         return this.ble.disconnect(this.currentTargetId);
     }
 
-    activatRecconectProcess() {
+    activateReconnectProcess() {
+        this.shootingService.isTargetConnected = false;
         this.ble.disconnect(this.currentTargetId).then(() => {
             this.isConnectedFlag = false;
             this.notifyDisconnect.next({isManually: false, status: true});
@@ -253,7 +233,7 @@ export class BleService {
                         console.log('Disconnected', 'The peripheral unexpectedly disconnected');
                         if (this.activateReconnectProcessCount < 5) {
                             this.activateReconnectProcessCount++;
-                            this.activatRecconectProcess();
+                            this.activateReconnectProcess();
                         } else {
                             this.activateReconnectProcessCount = 0;
                         }
@@ -263,19 +243,45 @@ export class BleService {
         });
     }
 
-    resetGateway() {
-        this.ble.write(this.currentTargetId, SERVICE_2, SERVICE_2_CHAR_WRITE, this.str2ab('R')).then((data) => {
-            this.notifyResetGateway.next(true);
-        });
-
+    private isAdlTarget(device: { name: string; }) {
+        return device.name.toLowerCase().includes('adl') ||
+        device.name.toLowerCase().includes('e64') ||
+        device.name.toLowerCase().includes('e64n015') ||
+        device.name.toLowerCase().includes('e1n') ||
+        device.name.toLowerCase().includes('e1n') ||
+        device.name.toLowerCase().includes('eMarn') ||
+        device.name.toLowerCase().includes('003') ||
+        device.name.toLowerCase().includes('e16') ||
+        device.name.toLowerCase().includes('nordic')
     }
 
-    str2ab(str) {
-        const buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
-        const bufView = new Uint16Array(buf);
-        for (let i = 0, strLen = str.length; i < strLen; i++) {
-            bufView[i] = str.charCodeAt(i);
+    private isAdlGateway(device: { name: string; }) {
+        return device.name.toLowerCase().includes('egateway');
+    }
+
+    private handleTargetMessages(messageFromGateway: string | string[],selectedTarget: { name: string; }) {
+        if (messageFromGateway.indexOf(',B,') > -1) {
+            this.gatewayService.processData(messageFromGateway);
         }
-        return buf;
+        else if (selectedTarget && messageFromGateway.indexOf(',S,') > -1) {
+            if(messageFromGateway.indexOf(selectedTarget.name) > -1){
+                this.gatewayService.processData(messageFromGateway);
+            }
+        }
+        else if(messageFromGateway.indexOf(',SZ,') > -1){
+            this.gatewayService.processData(messageFromGateway);
+        }
+        else if(messageFromGateway.indexOf('e94a4cc64bd4') > -1){
+            this.gatewayService.processData(messageFromGateway);
+        }
+    }
+
+    private handleGatewayMessages(messageFromGateway: any) {
+      if (messageFromGateway.indexOf('Connecting') > -1) {
+            this.gatewayTargets = {gateway: this.currentTargetId, target: messageFromGateway.split(' ')[3]};
+        }
+        else if (messageFromGateway.indexOf('Disconnected') > -1) {
+            this.activateReconnectProcess();
+        }
     }
 }

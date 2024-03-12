@@ -73,7 +73,7 @@ export class WizardSummaryComponent implements OnInit {
                 setTimeout(() => {
                     this.addTargetStart = false;
                     this.addTargetComplete = true;
-                    this.router.navigateByUrl('/home');
+                    this.router.navigateByUrl('/home',{ replaceUrl: true });
                 }, 3000);
             }
         });

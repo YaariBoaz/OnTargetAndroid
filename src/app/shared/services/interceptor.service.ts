@@ -1,8 +1,9 @@
 import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse} from '@angular/common/http';
 import {Observable, throwError, BehaviorSubject} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {InitService} from "../../shared/services/init.service";
 import {Injectable} from '@angular/core';
+import {InitService} from './init.service';
+import { Dialog } from '@capacitor/dialog';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
@@ -16,14 +17,24 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                 catchError((error: HttpErrorResponse) => {
                     let errorMsg = '';
                     if (error.error instanceof ErrorEvent) {
-                        console.log('this is client side error');
                         errorMsg = `Error: ${error.error.message}`;
                         this.initService.notifyOnErrorFunc(errorMsg);
+                        const showAlert = async () => {
+                            await Dialog.alert({
+                                title: 'Client  Error',
+                                message: errorMsg,
+                            });
+                        };
 
                     } else {
-                        console.log('this is server side error');
                         errorMsg = 'Something Went Wrong, Please Try Again'
                         this.initService.notifyOnErrorFunc(errorMsg);
+                        const showAlert = async () => {
+                            await Dialog.alert({
+                                title: 'Server  Error',
+                                message: errorMsg,
+                            });
+                        };
                     }
                     console.log(errorMsg);
                     return throwError(errorMsg);

@@ -56,18 +56,18 @@
             </div>
         </div>
         <div class="info">
-            <div>
-                <img src="../../../assets/icons/center-align.png"/>
-                <p *ngIf="groupingNumber !==0">{{groupingNumber | number : '1.2-2'}}</p>
-            </div>
+<!--            <div>-->
+<!--                <img src="../../../assets/icons/center-align.png"/>-->
+<!--                <p *ngIf="groupingNumber !==0">{{groupingNumber | number : '1.2-2'}}</p>-->
+<!--            </div>-->
             <div style="display: flex;width: 200px;justify-content: center;">
                 <countup-timer style="font-family: 'Orbitron', sans-serif;color: white;"
                                [countUpTimerConfig]="testConfig"></countup-timer>
             </div>
-            <div>
-                <img src="assets/icons/distance.svg">
-                <p>{{drill.range}} Y</p>
-            </div>
+<!--            <div>-->
+<!--                <img src="assets/icons/distance.svg">-->
+<!--                <p>{{drill.range}} Y</p>-->
+<!--            </div>-->
         </div>
 
         <button *ngIf="drillHasNotStarted" class="start" (click)="activateCounter()">START</button>

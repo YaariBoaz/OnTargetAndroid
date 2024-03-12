@@ -1,42 +1,50 @@
-
-    <section class="dashboard">
+<section class="dashboard">
         <div class="user-info">
+            <div class="content-wrapper">
             <div class="profile-pic-wrapper">
-            <img class="profile-pic" src="assets/ben.jpg">
-            </div>
-            <div class="text-info">
-                <div class="name">
-                    <span>Jon Jones</span>
-                    <span>
-                        <img src="assets/usa-shield.png"/>
-                    </span>
+            <img class="profile-pic" src="assets/ranking-profile-pic/1.jpeg">
+                <div class="text-info">
+                    <div class="name">
+                        <span>Josh Monty</span>
+                    </div>
                 </div>
-                <div class="rank">
-                    <span>Current Rank</span>
-                    <img src="assets/rank-demo.png">
+            </div>
+                <div class="score">
+                    {{storageService.rankings[0].score}}
                 </div>
             </div>
         </div>
-        <div class="histogram-container">
-           <canvas baseChart style="display: block; width: 500px; height: 400px;"
-                        [datasets]="radarChartDatasets"
-                        [options]="radarChartOptions"
-                        [labels]="radarChartLabels"
-                        [chartType]="'radar'"
-                >
-                </canvas>
+        <div class="slides-wrapper">
+            <p> FAVORITE'S </p>
+        <ion-slides [options]="slideOpts ">
+            <ion-slide *ngFor="let item of optionsToRender['rifle']; let index = index" [class.selected-target]="selectedChallengeFromFav == item"
+               (click)="onChallengeChosen(item)">
+                <ion-card>
+                <img [src]="getBackgroundImage(item)"/>
+                <p>{{ item.metadata.title}}</p>
+                <img *ngIf="selectedChallengeFromFav == item" src="assets/icons/Icon%20-%20Check%20Circle%20-%20Filled.svg">
+                </ion-card>
+            </ion-slide>
+         </ion-slides>
         </div>
-        <div class="charts-container">
-            <div> 1 </div>
-            <div> 1 </div>
-            <div> 1 </div>
-            <div> 1 </div>
+
+    <div class="ranking-wrapper">
+        <p> GLOBAL RANKINGS </p>
+        <div class="rank-row" *ngFor="let row of storageService.rankings">
+            <div class="profile-and-flag">
+                <img class="profile" [src]="row.pic">
+                <img class="flag" [src]="row.flag">
+            </div>
+            <div class="name-and-stats">
+                <div class="name"> {{row.name | uppercase}}</div>
+                <div class="stats"> H {{row.hits}} / M {{row.misses}} </div>
+            </div>
+            <div class="score">
+                <span> {{row.score}}</span>
+            </div>
         </div>
+    </div>
     </section>
-
-
-
-<!--        </header>-->
 
 
 

@@ -291,9 +291,9 @@
     // TOP OF METADATA
     {
       "com.telerik.plugins.nativepagetransitions": "0.7.0",
-      "cordova-plugin-android-permissions": "1.1.3",
+      "cordova-plugin-android-permissions": "1.1.5",
       "cordova-plugin-background-mode": "0.7.3",
-      "cordova-plugin-ble-central": "1.4.3",
+      "cordova-plugin-ble-central": "1.7.0",
       "cordova-plugin-crop": "0.3.1",
       "cordova-plugin-document-viewer": "1.0.0",
       "cordova-plugin-file": "6.0.2",
@@ -301,8 +301,8 @@
       "cordova-plugin-preview-any-file": "0.1.6",
       "cordova-plugin-purchase": "11.0.0",
       "cordova-plugin-purchases": "2.3.0",
-      "cordova-plugin-screen-orientation": "3.0.2",
-      "cordova-plugin-x-socialsharing": "6.0.3",
+      "cordova-plugin-screen-orientation": "3.0.3",
+      "cordova-plugin-x-socialsharing": "6.0.4",
       "es6-promise-plugin": "4.2.2",
       "cordova-plugin-device": "2.0.2"
     };

@@ -24,7 +24,7 @@ export class AuthGuardService implements CanActivate {
         const val = localStorage.isLoggedIn;
         if (val === 'null') {
             // @ts-ignore
-            this.router.navigateByUrl('/signin');
+            this.router.navigateByUrl('/signin',{ replaceUrl: true });
             return false;
         } else {
             return true;

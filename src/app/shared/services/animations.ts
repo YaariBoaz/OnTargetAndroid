@@ -1,7 +1,6 @@
 import {
     trigger, transition, state, style, animate
 } from '@angular/animations';
-import {animation, useAnimation} from '@angular/animations';
 
 export enum States {
     FadeIn = 'fadeIn',

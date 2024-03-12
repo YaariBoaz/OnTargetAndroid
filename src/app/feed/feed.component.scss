@@ -1,0 +1,85 @@
+.feed-wrapper{
+  overflow-y: auto;
+  .feed{
+     margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    iframe{
+      width: 100vw;
+      border: none;
+    }
+    .chat{
+      .history{
+        height: 180px;
+        overflow-y: auto;
+        .comment{
+          margin: 0.5em;
+          border: 1px solid #00000030;
+          border-radius: 8px;
+          padding: 0.5em;
+
+          .name-and-img{
+            display: flex;
+            align-items: center;
+            img{
+              height: 30px;
+              border-radius: 100%;
+            }
+          }
+          .comment-text{
+            p{
+            padding: 0;
+            margin: 0;
+            }
+          }
+        }
+      }
+      .my-comment{
+        display: flex;
+        justify-content: space-between;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      input{
+        background: lightgray;
+        color: black;
+        border: 1px solid black;
+        border-radius: 8px;
+        height: 30px;
+        margin-left: 10px;
+      }
+      }
+    }
+    .advertisment{
+      header{
+        font-size: 18px;
+        font-weight: bold;
+        padding: 0.5em;
+        border-bottom: 5px solid;
+      }
+      .buy{
+        border-top: 5px solid;
+        height: 50px;
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        button{
+          background: #2d3436;
+          color: white;
+          font-weight: bold;
+          padding: 10px 0.5em 0.5em;
+          height: 40px;
+          margin-right: 5px;
+          border-radius: 8px;
+        }
+      }
+    }
+    h6{
+      font-weight: bold;
+      font-size: 20px;
+    }
+  }
+}
+

@@ -1,5 +1,5 @@
 import {Component, OnInit, Output, EventEmitter} from '@angular/core';
-import {ShootingService} from '../../services/shooting.service';
+import {ShootingService} from '../../services/shooting/shooting.service';
 import {Router} from '@angular/router';
 import {ScreenOrientation} from '@ionic-native/screen-orientation/ngx';
 
@@ -30,7 +30,7 @@ export class NewTargetDesignComponent implements OnInit {
 
     onBackPressed() {
         this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
-        this.router.navigateByUrl('choose');
+        this.router.navigateByUrl('choose',{ replaceUrl: true });
     }
 
     setBestScore() {

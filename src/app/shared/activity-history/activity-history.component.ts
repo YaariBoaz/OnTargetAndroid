@@ -1,15 +1,23 @@
 // @ts-ignore
-import {Component, ElementRef, Inject, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {NetworkService} from '../services/network.service';
-import {StorageService} from '../services/storage.service';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    Inject,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
+    ViewChild
+} from '@angular/core';
 import {Router} from '@angular/router';
-import {Platform} from '@ionic/angular';
-import {HistoryModel, HistoryValueItemModel} from '../models/HistoryModel';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {HistoryValueItemModel} from '../models/HistoryModel';
 import {TargetType} from '../drill/constants';
 import {DrillType} from '../../custom-drill/custom-drill.page';
-import {InitService} from '../services/init.service';
-import {ShareDialogComponent} from '../share-dialog/share-dialog.component';
+import {Color, Label, MultiDataSet} from 'ng2-charts';
+import {ChartData, ChartOptions, ChartType, RadialChartOptions} from 'chart.js';
+import {DashboardService} from '../../dashboard/dashboard.service';
+import {ChallengesService} from "../ChooseDrill/challenges.service";
 
 // @ts-ignore
 @Component({
@@ -17,9 +25,21 @@ import {ShareDialogComponent} from '../share-dialog/share-dialog.component';
     templateUrl: './activity-history.component.html',
     styleUrls: ['./activity-history.component.scss'],
 })
-export class ActivityHistoryComponent implements OnInit, OnChanges {
+export class ActivityHistoryComponent implements OnInit, OnChanges,AfterViewInit {
     @ViewChild('container') container: ElementRef;
+    rankSystem = {
+        beginner: 0,
+        intermediate: 250,
+        senior: 400,
+        pro: 700
 
+    }
+    myRank;
+     totalHits: number;
+     totalScore: number;
+    totalBullets: number;
+    challengesCompleted: void;
+    challengesCompletedPrecent = 0;
     public get targetTypeEnum(): typeof TargetType {
         return TargetType;
     }
@@ -28,12 +48,12 @@ export class ActivityHistoryComponent implements OnInit, OnChanges {
         return DrillType;
     }
 
+    openShowMore: false
     train = {
         date: '05.07.18',
         day: 'Tuesday',
-        numberOfDrills: 6
+        numberOfDrills: 6,
     };
-    openShowMore = false;
     drills: HistoryValueItemModel[];
     hasConnection;
     currentDate = new Date();
@@ -41,44 +61,88 @@ export class ActivityHistoryComponent implements OnInit, OnChanges {
     beutifiedDate;
     stats = [];
     summaryObject;
-    trains;
+    trains = [];
     targetW;
     targetH;
 
-    days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    d = new Date();
-    dayName = this.days[this.d.getDay()];
+    public doughnutChartColors: Color[] = [{
+        backgroundColor: ['#78d857', '#fff'],
+        borderWidth:1,
+        borderColor:'#ffffff3d'
+    }];
+    doughnutChartPlugins;
+    public doughnutChartLabels: Label[] = ['HIT', 'MISS'];
+    public doughnutChartData: MultiDataSet=[]
+    public doughnutChartType: ChartType = 'doughnut';
+    doughnutChartOptions:ChartOptions = {
+        responsive:true,
+        maintainAspectRatio: false,
+        legend:{
+            display:false
+        },
+        cutoutPercentage:87,
+        // @ts-ignore
+        dashboardSerice:this.dashboardService
+     };
+    avgSessionTime = 0;
+    avgHits = 0;
+    avgMiss = 0;
+    chartDataReady = false;
+    selectedTab = 'stats';
+    chartIsReady = false;
+    madadToUse = 220;
 
-    madadToUse;
+    constructor(private router: Router,private challengesService:ChallengesService,public dashboardService:DashboardService) {
+        this.getAvgs();
+        this.getStats();
 
-    constructor(private router: Router,
-                private networkService: NetworkService,
-                private initService: InitService,
-                public dialog: MatDialog,
-                public dialogRef: MatDialogRef<ActivityHistoryComponent>,
-                private stoargeService: StorageService,
-                private platform: Platform) {
-        this.networkService.hasConnectionSubject$.subscribe(hasConnection => {
-            this.hasConnection = hasConnection;
-            if (this.hasConnection) {
-                this.handleOfflineScenario();
-            } else {
-                this.handleOfflineScenario();
-            }
-        });
-        this.targetW = this.initService.screenW;
-        this.targetH = this.initService.screenH;
+    }
+
+    ngAfterViewInit(): void {
 
     }
 
     ngOnInit() {
-        this.targetW = this.initService.screenW;
-        this.targetH = this.initService.screenH;
+        this.doughnutChartPlugins= [this.returnObjectDoughnutChartPlugins()];
+        const percent = this.dashboardService.getHitRatio().percent;
+        this.doughnutChartData = [[percent, 100-percent]]
+    }
 
-        if (this.targetW > this.targetH) {
-            this.madadToUse = 220;
-        } else {
-            this.madadToUse = 220;
+    returnObjectDoughnutChartPlugins(){
+        return {
+            beforeDraw(chart, args, options) {
+                const ctx = chart.ctx;const ratio = chart.config.options.dashboardSerice.getHitRatio();
+                const txt = ratio.text;
+                // Get options from the center object in options
+                const sidePadding = 60;
+                // @ts-ignore
+                const sidePaddingCalculated = (sidePadding / 100) * (chart.innerRadius * 2)
+
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                const centerX = ((chart.chartArea.left + chart.chartArea.right) / 2);
+                const centerY = ((chart.chartArea.top + chart.chartArea.bottom) / 2);
+
+                // Get the width of the string and also the width of the element minus 10 to give it 5px side padding
+                const stringWidth = ctx.measureText(txt).width;
+                // @ts-ignore
+                const elementWidth = (chart.innerRadius * 2) - sidePaddingCalculated;
+
+                // Find out how much the font can grow in width.
+                const widthRatio = elementWidth / stringWidth;
+                const newFontSize = Math.floor(12 * widthRatio);
+                // @ts-ignore
+                const elementHeight = (chart.innerRadius * 2);
+
+                // Pick a new font size so it will not be larger than the height of label.
+                const fontSizeToUse = 18;
+
+                ctx.font = fontSizeToUse + 'px Arial';
+                ctx.fillStyle = 'white';
+
+                // Draw text in center
+                ctx.fillText(ratio.text, centerX, centerY);
+            }
         }
     }
 
@@ -102,18 +166,9 @@ export class ActivityHistoryComponent implements OnInit, OnChanges {
     }
 
     onBackPressed() {
-        this.dialogRef.close();
     }
 
     handleOfflineScenario() {
-        this.stoargeService.historicalTrainingsDate$.subscribe((data: HistoryModel) => {
-            if (data) {
-                this.trains = data.value;
-                this.trains = this.trains.sort((a, b) => new Date(b.sessionDateTime).getTime() - new Date(a.sessionDateTime).getTime());
-                console.log(this.trains);
-            }
-
-        });
     }
 
     miliToTime(duration) {
@@ -141,32 +196,72 @@ export class ActivityHistoryComponent implements OnInit, OnChanges {
         }
     }
 
-    onShareModalOpen(drill) {
-        const dialogRef = this.dialog.open(ShareDialogComponent, {
-            data: {
-                drill,
-            },
-            width: '100%',
-            panelClass: 'full-width-dialog'
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            console.log(`Dialog result: ${result}`);
-        });
-    }
-
-    targetSize(targetId: any): number {
-        if (targetId.startsWith('e64') || targetId.startsWith('003') || targetId.toLowerCase().startsWith('c5')) {
-            return 64;
-        } else if (targetId.toLowerCase().startsWith('e128') || targetId.toLowerCase().startsWith('cs')) {
-            return 128;
-        } else {
-            return 16;
+     getAvgs() {
+        const activityHistory = JSON.parse(localStorage.getItem('activityHistory'));
+        if(activityHistory){
+            let totalSeconds = 0;
+            let totalHits = 0;
+            let totalMiss = 0;
+            Object.keys(activityHistory).forEach(key =>{
+                totalSeconds+= this.dashboardService.getTotalSecondsPerSession(activityHistory[key].summaryObject.totalTime)
+                totalHits+= this.dashboardService.getTotalHitsPerSession(activityHistory[key].summaryObject.points);
+                totalMiss+= this.dashboardService.getTotalMissPerSession(activityHistory[key].drill.numOfBullets,
+                    activityHistory[key].summaryObject.points);
+            })
+            this.avgSessionTime = totalSeconds
+            this.avgHits = totalHits;
+            this.avgMiss = totalMiss;
+            this.chartDataReady = true;
         }
     }
 
-    isIOS(){
-        return this.platform.is('ios')
+
+    geDevicetWidth() {
+        return window.innerWidth - 40
+    }
+    geDevicetHeight() {
+        return window.innerWidth - 150
+    }
+
+    secondsToString(sumSeconds){
+        const secNum = parseInt(sumSeconds, 10); // don't forget the second param
+        let hours:any   = Math.floor(secNum / 3600);
+        let minutes:any = Math.floor((secNum - (hours * 3600)) / 60);
+        let seconds:any = secNum - (hours * 3600) - (minutes * 60);
+
+        if (hours   < 10) {hours   = '0'+hours;}
+        if (minutes < 10) {minutes = '0'+minutes;}
+        if (seconds < 10) {seconds = '0'+seconds;}
+        console.log(hours+':'+minutes+':'+seconds);
+        return hours+':'+minutes+':'+seconds;
+    }
+
+    getChallegesCompleted():any {
+        const arr = this.dashboardService.getTrains();
+        const challengesCompleted = {};
+        if(arr){
+            arr.forEach(item =>{
+                if(item.drill.challngeId){
+                    if(!challengesCompleted.hasOwnProperty(item.drill.challngeId)){
+                        challengesCompleted[item.drill.challngeId] = true;
+                    }
+                }
+            })
+            const amountDone =  Object.keys(challengesCompleted).length;
+            const total = (this.challengesService.optionsToRender.rifle.length + this.challengesService.optionsToRender.pistol.length);
+            this.challengesCompletedPrecent = (100 * amountDone ) /total;
+        }
+    }
+
+
+    private getStats() {
+        this.trains = this.dashboardService.getTrains();
+        console.log(this.trains);
+        this.totalHits = this.dashboardService.getTotalHits(this.trains)
+        this.totalScore = this.dashboardService.getTotalScore(this.trains);
+        this.myRank = (100 * this.totalScore) / this.rankSystem.pro;
+        this.totalBullets = this.dashboardService.getTotalBullets(this.trains);
+        this.challengesCompleted = this.getChallegesCompleted();
     }
 }
 

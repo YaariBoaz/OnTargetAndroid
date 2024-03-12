@@ -2,7 +2,7 @@ import {
     AfterViewInit,
     ChangeDetectorRef,
     Component,
-    ElementRef,
+    ElementRef, HostListener,
     Input,
     NgZone,
     OnChanges,
@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import * as Hammer from 'hammerjs';
 
-import {ShootingService} from '../services/shooting.service';
+import {ShootingService} from '../services/shooting/shooting.service';
 import {DrillObject, DrillType} from '../../custom-drill/custom-drill.page';
 import {StorageService} from '../services/storage.service';
 import {countUpTimerConfigModel, CountupTimerService, timerTexts} from 'ngx-timer';
@@ -33,6 +33,7 @@ import {BalisticCalculatorService} from '../services/balistic-calculator.service
 import {HammerGestureConfig} from '@angular/platform-browser';
 import {BulletBankService} from '../services/bullet-bank.service';
 import {SubscriptionPage} from '../subscription/subscription.page';
+import {Subscription} from 'rxjs';
 
 
 @Component({
@@ -56,6 +57,8 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
     @ViewChild('downloadLink') downloadLink: ElementRef;
     @ViewChild('scrollMe', {static: true}) myScrollContainer: ElementRef;
 
+
+    subscription = new Subscription();
 
     /* FOR DEMO */
 
@@ -149,6 +152,7 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
         private hitNohitService: HitNohitService,
         private balisticCalculatorService: BalisticCalculatorService
     ) {
+        this.shootingService.isInDrill.next(true);
         this.drill = this.shootingService.selectedDrill;
         if (this.drill.challngeId) {
             this.isChallenge = true;
@@ -160,7 +164,7 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
         this.hitNohitService.setDrill(this.drill);
         this.hitNohitService.initStats();
         this.setTimeElapse();
-        this.isZero = this.shootingService.getisZero();
+        this.isZero = this.shootingService.getIsZero();
         this.balisticCalculatorService.resetStats();
         if (this.isZero) {
             const napar = this.balisticCalculatorService.calcNapar(true, this.targetType);
@@ -182,7 +186,6 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
 
     ngOnInit() {
         this.profile = this.userService.getUser();
-        this.removeTabs();
         this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
         this.registerNotifications();
     }
@@ -257,11 +260,10 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
     async onBackPressed() {
         this.countupTimerService.stopTimer();
         this.drillIsFinished = false;
-        const content: any = document.querySelector('mat-tab-header');
-        if (content) {
-            content.style.display = 'flex';
-        }
-        await this.closeDrillBeforeFinish(false);
+        this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT).then();
+        this.router.navigateByUrl('/dashboard',{ replaceUrl: true }).then();
+        this.shootingService.isInDrill.next(false);
+       // await this.closeDrillBeforeFinish(false);
 
     }
 
@@ -291,7 +293,9 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
         this.drillHasNotStarted = true;
     }
 
+    @HostListener('unloaded')
     ngOnDestroy() {
+        this.subscription.unsubscribe();
         console.log('[OnDestroy] Session Component');
     }
 
@@ -302,7 +306,7 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
             message: 'Save session ?',
             buttons: [
                 {
-                    text: 'Cancel',
+                    text: 'No',
                     role: 'cancel',
                     cssClass: 'secondary',
                     handler: (blah) => {
@@ -312,26 +316,38 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                     text: 'Yes',
                     handler: () => {
                         this.ngZone.runGuarded(() => {
-
-                            this.groupingNumber = 0;
-                            this.countupTimerService.stopTimer();
+                            if(this.targetType === TargetType.HitNoHit){
+                                this.saveActivityForOfflineApp()
+                                this.initStats();
+                                this.setTimeElapse();
+                                this.bleService.resetShots();
+                                this.stats = Object.assign(this.stats, []);
+                                this.drillHasNotStarted = true;
+                                this.showResults = false;
+                            }
+                            else {
+                                this.groupingNumber = 0;
+                                this.countupTimerService.stopTimer();
                                 if (this.isGateway) {
-                                    this.bulletBankService.subtractBullets(this.shots.length);
-                                    this.gateway.updateHistory();
+                               //     this.bulletBankService.subtractBullets(this.shots.length);
+                                    // this.gateway.updateHistory();
+                                    this.saveActivityForOfflineApp()
                                     this.gateway.initStats();
                                 } else {
-                                    this.bulletBankService.subtractBullets(this.shotNumber);
-                                    this.hitNohitService.updateHistory();
+                               //     this.bulletBankService.subtractBullets(this.shotNumber);
+                                    // this.hitNohitService.updateHistory();
+                                    this.saveActivityForOfflineApp()
                                     this.hitNohitService.initStats();
-                            }
-                            this.initStats();
-                            this.setTimeElapse();
-                            this.bleService.resetShots();
-                            this.stats = Object.assign(this.stats, []);
-                            this.drillHasNotStarted = true;
-                            this.showResults = false;
-                            if (this.bulletBankService.getNumberOfBulletsRemaining() - this.drill.numOfBullets  <= 0) {
-                                this.handleNoBulletsLeftAfterRestart();
+                                }
+                                this.initStats();
+                                this.setTimeElapse();
+                                this.bleService.resetShots();
+                                this.stats = Object.assign(this.stats, []);
+                                this.drillHasNotStarted = true;
+                                this.showResults = false;
+                                // if (this.bulletBankService.getNumberOfBulletsRemaining() - this.drill.numOfBullets  <= 0) {
+                                //     this.handleNoBulletsLeftAfterRestart();
+                                // }
                             }
                         });
                     }
@@ -341,26 +357,26 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                     cssClass: 'secondary',
                     handler: (blah) => {
                         this.ngZone.runGuarded(() => {
-                            this.bulletBankService.subtractBullets(this.shots.length);
+                          //  this.bulletBankService.subtractBullets(this.shots.length);
                             this.groupingNumber = 0;
                             this.countupTimerService.stopTimer();
                             if (this.isGateway) {
-                                this.bulletBankService.subtractBullets(this.shots.length);
+                         //       this.bulletBankService.subtractBullets(this.shots.length);
                                 this.gateway.initStats();
                             } else {
-                                this.bulletBankService.subtractBullets(this.shotNumber);
-                                this.hitNohitService.initStats();
+                           //     this.bulletBankService.subtractBullets(this.shotNumber);
+                               this.hitNohitService.initStats();
                             }
                             this.initStats();
                             this.setTimeElapse();
                             this.bleService.resetShots();
                             this.stats = Object.assign(this.stats, []);
                             this.drillHasNotStarted = true;
-                            this.showResults = false;
-                            if (this.bulletBankService.getNumberOfBulletsRemaining() - this.drill.numOfBullets  <= 0) {
-                                this.handleNoBulletsLeftAfterRestart();
-
-                            }
+                            // this.showResults = false;
+                            // if (this.bulletBankService.getNumberOfBulletsRemaining() - this.drill.numOfBullets  <= 0) {
+                            //     this.handleNoBulletsLeftAfterRestart();
+                            //
+                            // }
                         });
                     }
                 }
@@ -415,9 +431,9 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                             this.bleService.resetShots();
                             this.stats = Object.assign(this.stats, []);
                             if (!this.isChallenge) {
-                                this.router.navigateByUrl('home');
+                                this.router.navigateByUrl('home',{ replaceUrl: true });
                             } else {
-                                this.router.navigateByUrl('home');
+                                this.router.navigateByUrl('home',{ replaceUrl: true });
                             }
                             this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
 
@@ -441,9 +457,9 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                             this.bleService.resetShots();
                             this.stats = Object.assign(this.stats, []);
                             if (!this.isChallenge) {
-                                this.router.navigateByUrl('home');
+                                this.router.navigateByUrl('home',{ replaceUrl: true });
                             } else {
-                                this.router.navigateByUrl('home');
+                                this.router.navigateByUrl('home',{ replaceUrl: true });
                             }
                             this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
                         });
@@ -461,6 +477,10 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
     activateCounter() {
         this.counter = 3;
         this.showCounter = true;
+        this.stats = Object.assign(this.stats, []);
+        this.setTimeElapse();
+        this.initStats();
+        this.bleService.resetShots();
         const interval = setInterval(() => {
             this.counter--;
             if (this.counter < 1) {
@@ -510,63 +530,20 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
         }, 1000);
     }
 
-    private startFakeShooting(index) {
-        if (index < 5) {
-            setTimeout(() => {
-                this.stats = [this.fakeStats[index], ...this.stats];
-                // @ts-ignore
-                this.summaryObject.points = this.fakeStats[index].pageData.totalPoints;
-                // @ts-ignore
-                this.summaryObject.split = this.fakeStats[index].pageData.totalSplit;
-                // @ts-ignore
-                this.summaryObject.totalTime = this.fakeStats[index].pageData.totalTime;
-                // @ts-ignore
-                this.summaryObject.distanceFromCenterAvg = this.fakeStats[index].pageData.distanceFromCenterAvg;
-                this.shots.push(this.fakeShots[index]);
-                this.startFakeShooting(index + 1);
-            }, 1212);
-        }
-    }
-
-    private startFakeShootingHitNoHit(index) {
-        if (index < 5) {
-            setTimeout(() => {
-                this.stats = [this.fakeStats[index], ...this.stats];
-                // @ts-ignore
-                this.summaryObject.points = this.fakeStats[index].pageData.totalPoints;
-                // @ts-ignore
-                this.summaryObject.split = this.fakeStats[index].pageData.totalSplit;
-                // @ts-ignore
-                this.summaryObject.totalTime = this.fakeStats[index].pageData.totalTime;
-                // @ts-ignore
-                this.summaryObject.distanceFromCenterAvg = this.fakeStats[index].pageData.distanceFromCenterAvg;
-                this.shotNumber = index + 1;
-                this.startFakeShootingHitNoHit(index + 1);
-            }, 1212);
-        }
-    }
-
-    private removeTabs() {
-        const content: any = document.querySelector('mat-tab-header');
-        if (content) {
-            content.style.display = 'none';
-        }
-    }
-
     private registerNotifications() {
         this.registerHitNoHitNotifications();
         this.registerGatewayNotifications();
         this.registerBLENotifications();
         this.registerBatteryState();
-        this.shootingService.drillStarteEvent.subscribe(data => {
+        this.subscription.add(this.shootingService.drillStarteEvent.subscribe(data => {
             if (data) {
                 this.drillIsFinished = false;
             }
-        });
+        }));
     }
 
     private registerHitNoHitNotifications() {
-        this.hitNohitService.hitArrived.subscribe((data) => {
+        this.subscription.add(this.hitNohitService.hitArrived.subscribe((data) => {
             if (data !== null && !this.drillHasNotStarted && !this.drillIsFinished) {
                 this.shotNumber = data.statsData.stats.length;
                 this.stats = data.statsData.stats;
@@ -578,28 +555,50 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                     this.drillIsFinished = true;
                     this.cd.detectChanges();
                     this.countupTimerService.pauseTimer();
+                    this.saveActivityForOfflineApp()
+                    localStorage.getItem('activityHistory')
                 }
             }
-        });
-        this.hitNohitService.drillFinishedNotify.subscribe(data => {
+        }));
+        this.subscription.add(this.hitNohitService.drillFinishedNotify.subscribe(data => {
             if (data) {
                 this.drillIsFinished = true;
             }
-        });
-        this.hitNohitService.resetDrillSubject.subscribe((flag) => {
+        }));
+        this.subscription.add(this.hitNohitService.resetDrillSubject.subscribe((flag) => {
             if (flag) {
                 this.initStats();
             }
-        });
+        }));
     }
-
+    saveActivityForOfflineApp(){
+        const stateToSave = {
+            drill:this.drill,
+            stats:this.stats,
+            pageDate:this.pageData,
+            summaryObject:this.summaryObject,
+            rawHitsLocation:this.gateway.hits
+        }
+        let dictionary = localStorage.getItem('activityHistory')
+        if(!dictionary) {
+            const obj = new Object();
+            obj[new Date().getTime().toString()] = stateToSave;
+            localStorage.setItem('activityHistory',JSON.stringify(obj));
+        }else{
+            dictionary = JSON.parse(dictionary);
+            dictionary[new Date().getTime().toString()] = stateToSave;
+            localStorage.setItem('activityHistory',JSON.stringify(dictionary));
+        }
+        setTimeout(()=>{this.shootingService.setBestResults()},100)
+        this.drillHasNotStarted = true;
+    }
     registerGatewayNotifications() {
-        this.gateway.drillFinishedNotify.subscribe(data => {
+        this.subscription.add(this.gateway.drillFinishedNotify.subscribe(data => {
             if (data) {
                 this.drillIsFinished = true;
             }
-        });
-        this.gateway.hitArrived.subscribe((data: any) => {
+        }));
+        this.subscription.add(this.gateway.hitArrived.subscribe((data: any) => {
             if (data && !this.isFinish && data.statsData.stats.length > 0) {
                 if (this.drill.drillType === 3 && data.statsData.zeroData && Object.keys(data.statsData.zeroData).length !== 0) {
                     this.updateZeroData(data);
@@ -624,24 +623,24 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                     }
                 }
             }
-        });
+        }));
 
-        this.gateway.notifyShotArrivedFromGateway.subscribe((data) => {
+        this.subscription.add(this.gateway.notifyShotArrivedFromGateway.subscribe((data) => {
             if (data) {
                 this.shots.push({x: data.x, y: data.y});
             }
-        });
+        }));
     }
 
     registerBLENotifications() {
-        this.bleService.notifyTargetConnected.subscribe(status => {
+        this.subscription.add(this.bleService.notifyTargetConnected.subscribe(status => {
             if (status) {
                 this.isConnected = true;
                 // const loader = this.showToast('Target Connected', 'success');
             }
 
-        });
-        this.bleService.notifyDisconnect.subscribe((flag) => {
+        }));
+        this.subscription.add(this.bleService.notifyDisconnect.subscribe((flag) => {
             if (flag) {
                 if (!flag.isManually) {
                     // this.isConnected = false;
@@ -649,7 +648,7 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
                     // const loader = this.showToast('The target has been disconnected \n System trying to reconnect', 'danger');
                 }
             }
-        });
+        }));
     }
 
     scrollToBottom() {
@@ -713,12 +712,12 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
     }
 
     private registerBatteryState() {
-        this.gateway.notifyTargetConnectedToGateway.subscribe(data => {
+        this.subscription.add(this.gateway.notifyTargetConnectedToGateway.subscribe(data => {
             this.isConnected = true;
-        });
-        this.gateway.notifyTargetBattery.subscribe(data => {
+        }));
+        this.subscription.add(this.gateway.notifyTargetBattery.subscribe(data => {
             this.batteryPrecent = data;
-        });
+        }));
     }
 
     onSwipe(evt) {
@@ -772,15 +771,6 @@ export class DrillComponent implements OnInit, OnChanges, OnDestroy, AfterViewIn
         if (this.drill.numOfBullets === this.stats.length) {
             this.drillIsFinished = true;
             this.cd.detectChanges();
-        }
-    }
-
-
-    private setDrillType(drillType) {
-        if (drillType === 'HitNoHit') {
-            this.drill.drillType = DrillType.HitNoHit;
-        } else {
-            this.drill.drillType = DrillType.Regular;
         }
     }
 

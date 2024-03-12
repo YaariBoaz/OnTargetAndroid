@@ -31,7 +31,8 @@ import { MatMenuModule } from '@angular/material/menu';
     declarations: [DashboardPage, ActivityHistoryComponent,],
     entryComponents: [ActivityHistoryComponent,],
     exports: [
-        DashboardPage
+        DashboardPage,
+        ActivityHistoryComponent
     ]
 })
 export class Tab1PageModule {
